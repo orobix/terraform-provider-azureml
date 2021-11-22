@@ -3,7 +3,7 @@
 Run the following command to build the provider
 
 ```shell
-go build -o terraform-provider-hashicups
+go build -o terraform-provider-azureml
 ```
 
 ## Test sample configuration
