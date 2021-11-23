@@ -1,4 +1,4 @@
-# Terraform Provider Hashicups
+# Terraform Provider Azure Machine Learning
 
 Run the following command to build the provider
 

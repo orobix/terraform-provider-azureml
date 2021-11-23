@@ -1,4 +1,4 @@
-package azureml
+package provider
 
 import (
 	"context"
