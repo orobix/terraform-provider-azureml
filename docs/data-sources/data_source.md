@@ -12,7 +12,7 @@ Sample data source in the Terraform provider scaffolding.
 ## Example Usage
 
 ```terraform
-data "scaffolding_data_source" "example" {
+data "datastores_data_source" "example" {
   sample_attribute = "foo"
 }
 ```
