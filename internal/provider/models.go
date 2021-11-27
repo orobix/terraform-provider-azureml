@@ -7,8 +7,8 @@ type SystemData struct {
 	CreationUser     types.String `tfsdk:"creation_user"`
 	CreationUserType types.String `tfsdk:"creation_user_type"`
 
-	LastModifiedDate     types.String `tfsdk:"last_modified_user_type"`
-	LastModifiedUser     types.String `tfsdk:"last_modified_user_type"`
+	LastModifiedDate     types.String `tfsdk:"last_modified_data"`
+	LastModifiedUser     types.String `tfsdk:"last_modified_user"`
 	LastModifiedUserType types.String `tfsdk:"last_modified_user_type"`
 }
 
@@ -31,6 +31,6 @@ type Datastore struct {
 	StorageAccountName   types.String `tfsdk:"storage_account_name"`
 	StorageContainerName types.String `tfsdk:"storage_container_name"`
 
-	Auth       DatastoreAuth `tfsdk:"storage_container_name"`
-	SystemData SystemData    `tfsdk:"storage_container_name"`
+	Auth       DatastoreAuth `tfsdk:"auth"`
+	SystemData SystemData    `tfsdk:"system_data"`
 }
