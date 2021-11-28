@@ -19,3 +19,7 @@ provider "azureml" {
 data "azureml_datastores" "test" {
 
 }
+
+output "test" {
+  value = data.azureml_datastores.test
+}

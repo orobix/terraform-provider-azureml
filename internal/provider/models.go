@@ -7,7 +7,7 @@ type SystemData struct {
 	CreationUser     types.String `tfsdk:"creation_user"`
 	CreationUserType types.String `tfsdk:"creation_user_type"`
 
-	LastModifiedDate     types.String `tfsdk:"last_modified_data"`
+	LastModifiedDate     types.String `tfsdk:"last_modified_date"`
 	LastModifiedUser     types.String `tfsdk:"last_modified_user"`
 	LastModifiedUserType types.String `tfsdk:"last_modified_user_type"`
 }
