@@ -24,12 +24,10 @@ type provider struct {
 
 // Provider schema struct
 type providerData struct {
-	ClientId          types.String `tfsdk:"client_id"`
-	ClientSecret      types.String `tfsdk:"client_secret"`
-	TenantId          types.String `tfsdk:"tenant_id"`
-	SubscriptionId    types.String `tfsdk:"subscription_id"`
-	ResourceGroupName types.String `tfsdk:"resource_group_name"`
-	WorkspaceName     types.String `tfsdk:"workspace_name"`
+	ClientId       types.String `tfsdk:"client_id"`
+	ClientSecret   types.String `tfsdk:"client_secret"`
+	TenantId       types.String `tfsdk:"tenant_id"`
+	SubscriptionId types.String `tfsdk:"subscription_id"`
 }
 
 func (p provider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
@@ -49,14 +47,6 @@ func (p provider) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics
 				Required: true,
 			},
 			"subscription_id": {
-				Type:     types.StringType,
-				Required: true,
-			},
-			"resource_group_name": {
-				Type:     types.StringType,
-				Required: true,
-			},
-			"workspace_name": {
 				Type:     types.StringType,
 				Required: true,
 			},
@@ -153,12 +143,10 @@ func (p *provider) Configure(ctx context.Context, req tfsdk.ConfigureProviderReq
 
 	// Create a new HashiCups client and set it to the provider client
 	ws, err := workspace.New(workspace.Config{
-		ClientId:          config.ClientId.Value,
-		ClientSecret:      config.ClientSecret.Value,
-		TenantId:          config.TenantId.Value,
-		SubscriptionId:    config.SubscriptionId.Value,
-		ResourceGroupName: config.ResourceGroupName.Value,
-		WorkspaceName:     config.WorkspaceName.Value,
+		ClientId:       config.ClientId.Value,
+		ClientSecret:   config.ClientSecret.Value,
+		TenantId:       config.TenantId.Value,
+		SubscriptionId: config.SubscriptionId.Value,
 	}, false)
 
 	if err != nil {

@@ -34,3 +34,9 @@ type Datastore struct {
 
 	SystemData SystemData `tfsdk:"system_data"`
 }
+
+type DatastoreList struct {
+	ResourceGroupName types.String `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String `tfsdk:"workspace_name"`
+	Datastores        []Datastore  `tfsdk:"datastores"`
+}

@@ -14,6 +14,14 @@ func (d dataSourceDatastoresType) GetSchema(_ context.Context) (tfsdk.Schema, di
 		Description:         "List of Datastores.",
 		MarkdownDescription: "List of **Datastores**.",
 		Attributes: map[string]tfsdk.Attribute{
+			"resource_group_name": {
+				Type:     types.StringType,
+				Required: true,
+			},
+			"workspace_name": {
+				Type:     types.StringType,
+				Required: true,
+			},
 			"datastores": {
 				Computed: true,
 				Attributes: tfsdk.SetNestedAttributes(map[string]tfsdk.Attribute{
@@ -99,11 +107,15 @@ type dataSourceDatastores struct {
 }
 
 func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSourceRequest, resp *tfsdk.ReadDataSourceResponse) {
-	var resourceState struct {
-		Datastores []Datastore `tfsdk:"datastores"`
+	var resourceData DatastoreList
+
+	diags := req.Config.Get(ctx, &resourceData)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
 	}
 
-	datastores, err := d.p.client.GetDatastores()
+	datastores, err := d.p.client.GetDatastores(resourceData.ResourceGroupName.Value, resourceData.WorkspaceName.Value)
 	if err != nil {
 		resp.Diagnostics.AddError("Error retrieving datastores", err.Error())
 		return
@@ -134,11 +146,11 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 			},
 		}
 
-		resourceState.Datastores = append(resourceState.Datastores, d)
+		resourceData.Datastores = append(resourceData.Datastores, d)
 	}
 
 	// Set state
-	diags := resp.State.Set(ctx, &resourceState)
+	diags = resp.State.Set(ctx, &resourceData)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
