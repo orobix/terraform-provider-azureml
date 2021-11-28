@@ -30,7 +30,7 @@ type Datastore struct {
 	StorageType          types.String `tfsdk:"storage_type"`
 	StorageAccountName   types.String `tfsdk:"storage_account_name"`
 	StorageContainerName types.String `tfsdk:"storage_container_name"`
+	CredentialsType      types.String `tfsdk:"credentials_type"`
 
-	Auth       DatastoreAuth `tfsdk:"auth"`
-	SystemData SystemData    `tfsdk:"system_data"`
+	SystemData SystemData `tfsdk:"system_data"`
 }

@@ -49,36 +49,9 @@ func (d dataSourceDatastoresType) GetSchema(_ context.Context) (tfsdk.Schema, di
 						Type:     types.StringType,
 						Computed: true,
 					},
-					"auth": {
+					"credentials_type": {
+						Type:     types.StringType,
 						Computed: true,
-						Attributes: tfsdk.SingleNestedAttributes(map[string]tfsdk.Attribute{
-							"credentials_type": {
-								Type:     types.StringType,
-								Computed: true,
-							},
-							"client_id": {
-								Type:     types.StringType,
-								Computed: true,
-							},
-							"client_secret": {
-								Type:      types.StringType,
-								Computed:  true,
-								Sensitive: true,
-							},
-							"account_key": {
-								Type:     types.StringType,
-								Computed: true,
-							},
-							"sql_user_name": {
-								Type:     types.StringType,
-								Computed: true,
-							},
-							"sql_user_password": {
-								Type:      types.StringType,
-								Computed:  true,
-								Sensitive: true,
-							},
-						}),
 					},
 					"system_data": {
 						Computed: true,
@@ -149,14 +122,8 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 			StorageAccountName:   types.String{Value: datastore.StorageAccountName},
 			StorageContainerName: types.String{Value: datastore.StorageContainerName},
 
-			Auth: DatastoreAuth{
-				CredentialsType: types.String{Value: datastore.Auth.CredentialsType},
-				ClientId:        types.String{Value: datastore.Auth.ClientId},
-				ClientSecret:    types.String{Value: datastore.Auth.ClientSecret},
-				AccountKey:      types.String{Value: datastore.Auth.AccountKey},
-				SqlUserName:     types.String{Value: datastore.Auth.SqlUserName},
-				SqlUserPassword: types.String{Value: datastore.Auth.SqlUserPassword},
-			},
+			CredentialsType: types.String{Value: datastore.Auth.CredentialsType},
+
 			SystemData: SystemData{
 				CreationDate:         types.String{Value: datastore.SystemData.CreationDate.Format(defaultDateFormat)},
 				CreationUser:         types.String{Value: datastore.SystemData.CreationUser},

@@ -5,6 +5,6 @@ provider "registry.terraform.io/zanotti/azureml" {
   version     = "0.0.1"
   constraints = "0.0.1"
   hashes = [
-    "h1:pLPGzC1O003iEukGDjNOH4+2PVZTaQgvwcroYCPedHs=",
+    "h1:LGne3ImdmF4+bLsB2vpA20uC/0byZDtN5WFImYH7Q54=",
   ]
 }
