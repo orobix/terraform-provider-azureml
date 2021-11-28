@@ -20,6 +20,8 @@ github.com/Telemaco019/azureml-go-sdk v0.0.0-20211123194056-d24475cfbd58 h1:FnM6
 github.com/Telemaco019/azureml-go-sdk v0.0.0-20211123194056-d24475cfbd58/go.mod h1:jkpxBR2AdSByRGceVe8OTMs2miMI0Kw4Y5ECGmlcv/4=
 github.com/Telemaco019/azureml-go-sdk v0.0.0-20211127140300-cb8152a5056b h1:HquTYlH50TOMj1PMAggUV1LhzLc8wdbqK2k4KrtsFT8=
 github.com/Telemaco019/azureml-go-sdk v0.0.0-20211127140300-cb8152a5056b/go.mod h1:jkpxBR2AdSByRGceVe8OTMs2miMI0Kw4Y5ECGmlcv/4=
+github.com/Telemaco019/azureml-go-sdk v0.0.0-20211128090438-94a8359eaf75 h1:IULtnRXf6UT0oxjGbwP1e7Cdb/7BOwFwf98Tqd3MopM=
+github.com/Telemaco019/azureml-go-sdk v0.0.0-20211128090438-94a8359eaf75/go.mod h1:jkpxBR2AdSByRGceVe8OTMs2miMI0Kw4Y5ECGmlcv/4=
 github.com/acomagu/bufpipe v1.0.3/go.mod h1:mxdxdup/WdsKVreO5GpW4+M/1CE2sMG4jeGJ2sYmHc4=
 github.com/andybalholm/crlf v0.0.0-20171020200849-670099aa064f/go.mod h1:k8feO4+kXDxro6ErPXBRTJ/ro2mf0SsFG8s7doP9kJE=
 github.com/anmitsu/go-shlex v0.0.0-20161002113705-648efa622239/go.mod h1:2FmKhYUyUczH0OGQWaF5ceTx0UBShxjsH6f8oGKYe2c=
