@@ -38,3 +38,5 @@ website/vendor
 # Tf secrets
 backend.tfvars
 *.secret.tfvars
+
+.terraform.lock.hcl
