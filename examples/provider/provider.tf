@@ -19,6 +19,15 @@ data "azureml_datastores" "test" {
   workspace_name      = var.workspace_name
 }
 
-output "test" {
+data "azureml_datastore" "test" {
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+  name                = "workspaceworkingdirectory"
+}
+
+output "all_datastores" {
   value = data.azureml_datastores.test
+}
+output "single_datastore" {
+  value = data.azureml_datastore.test
 }

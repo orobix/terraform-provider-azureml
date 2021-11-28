@@ -21,7 +21,26 @@ type DatastoreAuth struct {
 	SqlUserPassword types.String `tfsdk:"sql_user_password"`
 }
 
-type Datastore struct {
+type ReadDatastoreWithSystemDataObject struct {
+	ResourceGroupName types.String `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String `tfsdk:"workspace_name"`
+
+	ID                   types.String `tfsdk:"id"`
+	Name                 types.String `tfsdk:"name"`
+	Description          types.String `tfsdk:"description"`
+	Type                 types.String `tfsdk:"type"`
+	IsDefault            types.Bool   `tfsdk:"is_default"`
+	StorageType          types.String `tfsdk:"storage_type"`
+	StorageAccountName   types.String `tfsdk:"storage_account_name"`
+	StorageContainerName types.String `tfsdk:"storage_container_name"`
+	CredentialsType      types.String `tfsdk:"credentials_type"`
+
+	SystemData types.Object `tfsdk:"system_data"`
+}
+type ReadDatastoreWithSystemDataStruct struct {
+	ResourceGroupName types.String `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String `tfsdk:"workspace_name"`
+
 	ID                   types.String `tfsdk:"id"`
 	Name                 types.String `tfsdk:"name"`
 	Description          types.String `tfsdk:"description"`
@@ -36,7 +55,7 @@ type Datastore struct {
 }
 
 type DatastoreList struct {
-	ResourceGroupName types.String `tfsdk:"resource_group_name"`
-	WorkspaceName     types.String `tfsdk:"workspace_name"`
-	Datastores        []Datastore  `tfsdk:"datastores"`
+	ResourceGroupName types.String                        `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String                        `tfsdk:"workspace_name"`
+	Datastores        []ReadDatastoreWithSystemDataStruct `tfsdk:"datastores"`
 }

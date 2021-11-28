@@ -25,6 +25,14 @@ func (d dataSourceDatastoresType) GetSchema(_ context.Context) (tfsdk.Schema, di
 			"datastores": {
 				Computed: true,
 				Attributes: tfsdk.SetNestedAttributes(map[string]tfsdk.Attribute{
+					"resource_group_name": {
+						Type:     types.StringType,
+						Required: true,
+					},
+					"workspace_name": {
+						Type:     types.StringType,
+						Required: true,
+					},
 					"id": {
 						Type:     types.StringType,
 						Computed: true,
@@ -123,7 +131,10 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 
 	// Map response body to resource schema
 	for _, datastore := range datastores {
-		d := Datastore{
+		d := ReadDatastoreWithSystemDataStruct{
+			ResourceGroupName: types.String{Value: resourceData.ResourceGroupName.Value},
+			WorkspaceName:     types.String{Value: resourceData.WorkspaceName.Value},
+
 			ID:          types.String{Value: datastore.Id},
 			Name:        types.String{Value: datastore.Name},
 			Description: types.String{Value: datastore.Description},
@@ -135,7 +146,6 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 			StorageContainerName: types.String{Value: datastore.StorageContainerName},
 
 			CredentialsType: types.String{Value: datastore.Auth.CredentialsType},
-
 			SystemData: SystemData{
 				CreationDate:         types.String{Value: datastore.SystemData.CreationDate.Format(defaultDateFormat)},
 				CreationUser:         types.String{Value: datastore.SystemData.CreationUser},
@@ -145,7 +155,6 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 				LastModifiedUserType: types.String{Value: datastore.SystemData.LastModifiedUserType},
 			},
 		}
-
 		resourceData.Datastores = append(resourceData.Datastores, d)
 	}
 
