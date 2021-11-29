@@ -40,3 +40,5 @@ backend.tfvars
 *.secret.tfvars
 
 .terraform.lock.hcl
+
+.idea/
