@@ -45,10 +45,6 @@ func (d dataSourceDatastoresType) GetSchema(_ context.Context) (tfsdk.Schema, di
 						Type:     types.StringType,
 						Computed: true,
 					},
-					"type": {
-						Type:     types.StringType,
-						Computed: true,
-					},
 					"is_default": {
 						Type:     types.BoolType,
 						Computed: true,
@@ -138,7 +134,6 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 			ID:          types.String{Value: datastore.Id},
 			Name:        types.String{Value: datastore.Name},
 			Description: types.String{Value: datastore.Description},
-			Type:        types.String{Value: datastore.Type},
 			IsDefault:   types.Bool{Value: datastore.IsDefault},
 
 			StorageType:          types.String{Value: datastore.StorageType},

@@ -13,8 +13,8 @@ type dataSourceDatastoreType struct{}
 
 func (d dataSourceDatastoreType) GetSchema(_ context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
-		Description:         "Single ReadDatastoreWithSystemDataObject.",
-		MarkdownDescription: "Single **ReadDatastoreWithSystemDataObject**.",
+		Description:         "Single Datastore.",
+		MarkdownDescription: "Single **Datastore**.",
 		Attributes: map[string]tfsdk.Attribute{
 			"resource_group_name": {
 				Type:     types.StringType,
@@ -33,10 +33,6 @@ func (d dataSourceDatastoreType) GetSchema(_ context.Context) (tfsdk.Schema, dia
 				Computed: true,
 			},
 			"description": {
-				Type:     types.StringType,
-				Computed: true,
-			},
-			"type": {
 				Type:     types.StringType,
 				Computed: true,
 			},
@@ -127,7 +123,6 @@ func (ds dataSourceDatastore) Read(ctx context.Context, req tfsdk.ReadDataSource
 	resourceData.ID = types.String{Value: datastore.Id}
 	resourceData.Name = types.String{Value: datastore.Name}
 	resourceData.Description = types.String{Value: datastore.Description}
-	resourceData.Type = types.String{Value: datastore.Type}
 	resourceData.IsDefault = types.Bool{Value: datastore.IsDefault}
 	resourceData.StorageType = types.String{Value: datastore.StorageType}
 	resourceData.StorageAccountName = types.String{Value: datastore.StorageAccountName}

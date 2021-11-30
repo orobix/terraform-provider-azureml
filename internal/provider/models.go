@@ -28,7 +28,6 @@ type ReadDatastoreWithSystemDataObject struct {
 	ID                   types.String `tfsdk:"id"`
 	Name                 types.String `tfsdk:"name"`
 	Description          types.String `tfsdk:"description"`
-	Type                 types.String `tfsdk:"type"`
 	IsDefault            types.Bool   `tfsdk:"is_default"`
 	StorageType          types.String `tfsdk:"storage_type"`
 	StorageAccountName   types.String `tfsdk:"storage_account_name"`
@@ -44,7 +43,6 @@ type ReadDatastoreWithSystemDataStruct struct {
 	ID                   types.String `tfsdk:"id"`
 	Name                 types.String `tfsdk:"name"`
 	Description          types.String `tfsdk:"description"`
-	Type                 types.String `tfsdk:"type"`
 	IsDefault            types.Bool   `tfsdk:"is_default"`
 	StorageType          types.String `tfsdk:"storage_type"`
 	StorageAccountName   types.String `tfsdk:"storage_account_name"`
@@ -58,4 +56,7 @@ type DatastoreList struct {
 	ResourceGroupName types.String                        `tfsdk:"resource_group_name"`
 	WorkspaceName     types.String                        `tfsdk:"workspace_name"`
 	Datastores        []ReadDatastoreWithSystemDataStruct `tfsdk:"datastores"`
+}
+
+type Datastore struct {
 }

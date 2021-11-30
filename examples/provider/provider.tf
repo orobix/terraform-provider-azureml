@@ -31,3 +31,14 @@ output "all_datastores" {
 output "single_datastore" {
   value = data.azureml_datastore.test
 }
+
+resource "azureml_datastore" "test" {
+  resource_group_name = ""
+  workspace_name      = ""
+  name                = ""
+  description         = ""
+  storage_type                = ""
+  auth                = {
+    credentials_type = ""
+  }
+}

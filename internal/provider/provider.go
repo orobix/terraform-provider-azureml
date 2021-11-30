@@ -161,8 +161,11 @@ func (p *provider) Configure(ctx context.Context, req tfsdk.ConfigureProviderReq
 	p.configured = true
 }
 
+// GetResources - Defines provider resources
 func (p *provider) GetResources(ctx context.Context) (map[string]tfsdk.ResourceType, diag.Diagnostics) {
-	return map[string]tfsdk.ResourceType{}, nil
+	return map[string]tfsdk.ResourceType{
+		"azureml_datastore": resourceDatastoreType{},
+	}, nil
 }
 
 // GetDataSources - Defines provider data sources
