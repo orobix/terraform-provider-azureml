@@ -67,3 +67,37 @@ func (s StorageAccountNameValidator) MarkdownDescription(ctx context.Context) st
 func (s StorageAccountNameValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
 	panic("implement me")
 }
+
+type StringNotEmptyValidator struct {
+	AttributeIsRequired bool
+}
+
+func (s StringNotEmptyValidator) Description(ctx context.Context) string {
+	return "The attribute must be a non-empty string."
+}
+
+func (s StringNotEmptyValidator) MarkdownDescription(ctx context.Context) string {
+	return "The attribute must be a non-empty string."
+}
+
+func (s StringNotEmptyValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
+	v, ok := request.AttributeConfig.(types.String)
+	if !ok {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value",
+			"Attribute value should be a string",
+		)
+		return
+	}
+	if s.AttributeIsRequired == false && (v.Unknown == true || v.Null == true) {
+		return
+	}
+	if stringIsEmpty(v.Value) {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value",
+			"The value must be a non-empty string.",
+		)
+	}
+}

@@ -28,14 +28,23 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 			"resource_group_name": {
 				Type:     types.StringType,
 				Required: true,
+				Validators: []tfsdk.AttributeValidator{
+					StringNotEmptyValidator{},
+				},
 			},
 			"workspace_name": {
 				Type:     types.StringType,
 				Required: true,
+				Validators: []tfsdk.AttributeValidator{
+					StringNotEmptyValidator{},
+				},
 			},
 			"name": {
 				Type:     types.StringType,
 				Required: true,
+				Validators: []tfsdk.AttributeValidator{
+					StringNotEmptyValidator{},
+				},
 			},
 			"description": {
 				Type:     types.StringType,
@@ -53,15 +62,18 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				},
 			},
 			"storage_account_name": {
-				Type:       types.StringType,
-				Optional:   true,
+				Type:     types.StringType,
+				Optional: true,
 				Validators: []tfsdk.AttributeValidator{
-					//StorageAccountNameValidator{},
+					StringNotEmptyValidator{},
 				},
 			},
 			"storage_container_name": {
 				Type:     types.StringType,
 				Optional: true,
+				Validators: []tfsdk.AttributeValidator{
+					StringNotEmptyValidator{},
+				},
 			},
 			"auth": {
 				Required: true,
@@ -69,33 +81,54 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 					"credentials_type": {
 						Type:     types.StringType,
 						Required: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{AttributeIsRequired: true},
+						},
 					},
 					"tenant_id": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 					"client_id": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 					"client_secret": {
 						Type:      types.StringType,
 						Optional:  true,
 						Sensitive: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 					"account_key": {
 						Type:      types.StringType,
 						Optional:  true,
 						Sensitive: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 					"sql_user_name": {
 						Type:     types.StringType,
 						Optional: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 					"sql_user_password": {
 						Type:      types.StringType,
 						Optional:  true,
 						Sensitive: true,
+						Validators: []tfsdk.AttributeValidator{
+							StringNotEmptyValidator{},
+						},
 					},
 				}),
 			},
@@ -176,6 +209,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Error creating datastore", err.Error())
+		return
 	}
 
 	result := DatastoreWithAuth{

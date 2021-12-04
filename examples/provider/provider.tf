@@ -33,12 +33,12 @@ output "single_datastore" {
 }
 
 resource "azureml_datastore" "test" {
-  resource_group_name = ""
-  workspace_name      = ""
-  name                = ""
+  resource_group_name = "foo"
+  workspace_name      = null
+  name                = "test"
   description         = ""
   storage_type        = "AzureBlob"
-  auth = {
+  auth                = {
     credentials_type = ""
   }
 }
