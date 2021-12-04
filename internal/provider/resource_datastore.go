@@ -144,7 +144,7 @@ type resourceDatastore struct {
 }
 
 func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceRequest, resp *tfsdk.CreateResourceResponse) {
-	var resourceData WriteDatastoreWithSystemDataObject
+	var resourceData ConfigReadableDatastoreWithAuth
 
 	diags := req.Config.Get(ctx, &resourceData)
 	resp.Diagnostics.Append(diags...)
@@ -178,7 +178,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 		resp.Diagnostics.AddError("Error creating datastore", err.Error())
 	}
 
-	result := WriteDatastoreWithSystemDataStruct{
+	result := DatastoreWithAuth{
 		ResourceGroupName:    types.String{Value: resourceData.ResourceGroupName.Value},
 		WorkspaceName:        types.String{Value: resourceData.WorkspaceName.Value},
 		ID:                   types.String{Value: createdDatastore.Id},
@@ -216,7 +216,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 }
 
 func (r resourceDatastore) Read(ctx context.Context, req tfsdk.ReadResourceRequest, resp *tfsdk.ReadResourceResponse) {
-	var resourceData WriteDatastoreWithSystemDataStruct
+	var resourceData DatastoreWithAuth
 
 	diags := req.State.Get(ctx, &resourceData)
 	resp.Diagnostics.Append(diags...)

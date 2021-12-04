@@ -100,7 +100,7 @@ type dataSourceDatastore struct {
 }
 
 func (ds dataSourceDatastore) Read(ctx context.Context, req tfsdk.ReadDataSourceRequest, resp *tfsdk.ReadDataSourceResponse) {
-	var resourceData ReadDatastoreWithSystemDataObject
+	var resourceData ConfigReadableDatastore
 
 	diags := req.Config.Get(ctx, &resourceData)
 	resp.Diagnostics.Append(diags...)

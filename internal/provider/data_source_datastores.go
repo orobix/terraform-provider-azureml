@@ -127,7 +127,7 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 
 	// Map response body to resource schema
 	for _, datastore := range datastores {
-		d := ReadDatastoreWithSystemDataStruct{
+		d := Datastore{
 			ResourceGroupName: types.String{Value: resourceData.ResourceGroupName.Value},
 			WorkspaceName:     types.String{Value: resourceData.WorkspaceName.Value},
 
