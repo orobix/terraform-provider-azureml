@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/Telamco019/terraform-provider-azureml/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-provider-scaffolding/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website

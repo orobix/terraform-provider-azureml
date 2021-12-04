@@ -37,8 +37,8 @@ resource "azureml_datastore" "test" {
   workspace_name      = ""
   name                = ""
   description         = ""
-  storage_type                = ""
-  auth                = {
+  storage_type        = ""
+  auth = {
     credentials_type = ""
   }
 }
