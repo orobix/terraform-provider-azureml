@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	cloud.google.com/go v0.61.0 // indirect
-	github.com/Telemaco019/azureml-go-sdk v0.0.0-20211129221608-0ca47cd8312b
+	github.com/Telemaco019/azureml-go-sdk v0.0.0-20211129221608-0ca47cd8312b // indirect
 	github.com/aws/aws-sdk-go v1.25.3 // indirect
 	github.com/hashicorp/go-hclog v0.15.0 // indirect
 	github.com/hashicorp/go-plugin v1.4.1 // indirect

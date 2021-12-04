@@ -14,6 +14,7 @@ type SystemData struct {
 
 type DatastoreAuth struct {
 	CredentialsType types.String `tfsdk:"credentials_type"`
+	TenantId        types.String `tfsdk:"tenant_id"`
 	ClientId        types.String `tfsdk:"client_id"`
 	ClientSecret    types.String `tfsdk:"client_secret"`
 	AccountKey      types.String `tfsdk:"account_key"`
@@ -36,6 +37,7 @@ type ReadDatastoreWithSystemDataObject struct {
 
 	SystemData types.Object `tfsdk:"system_data"`
 }
+
 type ReadDatastoreWithSystemDataStruct struct {
 	ResourceGroupName types.String `tfsdk:"resource_group_name"`
 	WorkspaceName     types.String `tfsdk:"workspace_name"`
@@ -58,5 +60,34 @@ type DatastoreList struct {
 	Datastores        []ReadDatastoreWithSystemDataStruct `tfsdk:"datastores"`
 }
 
-type Datastore struct {
+type WriteDatastoreWithSystemDataObject struct {
+	ResourceGroupName types.String `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String `tfsdk:"workspace_name"`
+
+	ID                   types.String `tfsdk:"id"`
+	Name                 types.String `tfsdk:"name"`
+	Description          types.String `tfsdk:"description"`
+	IsDefault            types.Bool   `tfsdk:"is_default"`
+	StorageType          types.String `tfsdk:"storage_type"`
+	StorageAccountName   types.String `tfsdk:"storage_account_name"`
+	StorageContainerName types.String `tfsdk:"storage_container_name"`
+
+	Auth       DatastoreAuth `tfsdk:"auth"`
+	SystemData types.Object  `tfsdk:"system_data"`
+}
+
+type WriteDatastoreWithSystemDataStruct struct {
+	ResourceGroupName types.String `tfsdk:"resource_group_name"`
+	WorkspaceName     types.String `tfsdk:"workspace_name"`
+
+	ID                   types.String `tfsdk:"id"`
+	Name                 types.String `tfsdk:"name"`
+	Description          types.String `tfsdk:"description"`
+	IsDefault            types.Bool   `tfsdk:"is_default"`
+	StorageType          types.String `tfsdk:"storage_type"`
+	StorageAccountName   types.String `tfsdk:"storage_account_name"`
+	StorageContainerName types.String `tfsdk:"storage_container_name"`
+
+	Auth       DatastoreAuth `tfsdk:"auth"`
+	SystemData SystemData    `tfsdk:"system_data"`
 }
