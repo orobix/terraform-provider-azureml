@@ -1,0 +1,19 @@
+---
+layout: ""
+page_title: "Provider: AzureML"
+description: |-
+  The AzureML provider provides resources to interact with an Azure Machine Learning Workspace.
+---
+
+# AzureML Provider
+
+The AzureML provider provides resources to interact with an Azure Machine Learning Workspace.
+
+A service user (e.g. Azure Service Principal) is required for using the provider. It is recommended to use a Service
+Principal specific to Terraform.
+
+## Example Usage
+
+{{tffile "examples/provider/provider.tf"}}
+
+{{ .SchemaMarkdown | trimspace }}

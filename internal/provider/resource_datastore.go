@@ -18,8 +18,7 @@ type resourceDatastoreType struct {
 // GetSchema - Datastore Resource schema
 func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
-		Description:         "Single Datastore.",
-		MarkdownDescription: "Single **Datastore**.",
+		Description: "Manages a Datastore of an Azure Machine Learning workspace.",
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
 				Type:        types.StringType,
