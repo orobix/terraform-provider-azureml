@@ -7,6 +7,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+const (
+	storageAccountNameMaxLength = 24
+	storageAccountNameMinLength = 24
+)
+
 func NewStorageTypeValidator() *StorageTypeValidator {
 	return &StorageTypeValidator{
 		allowedTypes: []string{
@@ -54,18 +59,55 @@ func (s StorageTypeValidator) Validate(ctx context.Context, request tfsdk.Valida
 }
 
 type StorageAccountNameValidator struct {
+	AttributeIsRequired bool
 }
 
 func (s StorageAccountNameValidator) Description(ctx context.Context) string {
-	panic("implement me")
+	return "The attribute must be a valid name for a Storage Account."
 }
 
 func (s StorageAccountNameValidator) MarkdownDescription(ctx context.Context) string {
-	panic("implement me")
+	return "The attribute must be a valid name for a Storage Account."
 }
 
 func (s StorageAccountNameValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
-	panic("implement me")
+	v, ok := request.AttributeConfig.(types.String)
+	if !ok {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value",
+			"Attribute value should be a string",
+		)
+		return
+	}
+	if s.AttributeIsRequired == false && (v.Unknown == true || v.Null == true) {
+		return
+	}
+
+	// Check length
+	length := len(v.Value)
+	if length < storageAccountNameMinLength || length > storageAccountNameMaxLength {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value",
+			fmt.Sprintf(
+				"Storage account name must be between %d and %d characters.",
+				storageAccountNameMinLength,
+				storageAccountNameMaxLength,
+			),
+		)
+		return
+	}
+
+	// Check format
+	if !stringIsOnlyLettersAndDigits(v.Value) {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value",
+			"Storage account name can contain only characters and digits.",
+		)
+		return
+	}
 }
 
 type StringNotEmptyValidator struct {
@@ -99,5 +141,6 @@ func (s StringNotEmptyValidator) Validate(ctx context.Context, request tfsdk.Val
 			"Invalid value",
 			"The value must be a non-empty string.",
 		)
+		return
 	}
 }

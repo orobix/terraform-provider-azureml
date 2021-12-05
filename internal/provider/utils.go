@@ -1,6 +1,9 @@
 package provider
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 func contains(s []string, str string) bool {
 	for _, v := range s {
@@ -13,4 +16,9 @@ func contains(s []string, str string) bool {
 
 func stringIsEmpty(s string) bool {
 	return len(strings.TrimSpace(s)) == 0
+}
+
+func stringIsOnlyLettersAndDigits(s string) bool {
+	res, _ := regexp.MatchString("^[A-Za-z0-9]*$", s)
+	return res
 }

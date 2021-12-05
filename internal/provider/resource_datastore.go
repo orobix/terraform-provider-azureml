@@ -66,6 +66,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Optional: true,
 				Validators: []tfsdk.AttributeValidator{
 					StringNotEmptyValidator{},
+					StorageAccountNameValidator{},
 				},
 			},
 			"storage_container_name": {
