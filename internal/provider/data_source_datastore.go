@@ -137,7 +137,7 @@ func (ds dataSourceDatastore) Read(ctx context.Context, req tfsdk.ReadDataSource
 		resourceData.Name.Value,
 	)
 	if err != nil {
-		msg := fmt.Sprintf("Error retrieving datastore \"%s\"", resourceData.Name.Value)
+		msg := fmt.Sprintf("Error retrieving datastore \"%s\".", resourceData.Name.Value)
 		resp.Diagnostics.AddError(msg, err.Error())
 		return
 	}

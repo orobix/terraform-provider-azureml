@@ -147,7 +147,7 @@ func (d dataSourceDatastores) Read(ctx context.Context, req tfsdk.ReadDataSource
 
 	datastores, err := d.p.client.GetDatastores(resourceData.ResourceGroupName.Value, resourceData.WorkspaceName.Value)
 	if err != nil {
-		resp.Diagnostics.AddError("Error retrieving datastores", err.Error())
+		resp.Diagnostics.AddError("Error retrieving datastores.", err.Error())
 		return
 	}
 

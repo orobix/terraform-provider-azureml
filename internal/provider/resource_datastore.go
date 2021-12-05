@@ -57,6 +57,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 			"is_default": {
 				Type:        types.BoolType,
 				Optional:    true,
+				Computed:    true,
 				Description: "Is the datastore the default datastore of the Azure ML Workspace?",
 			},
 			"storage_type": {
@@ -225,7 +226,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 		Name:                 resourceData.Name.Value,
 		IsDefault:            resourceData.IsDefault.Value,
 		Description:          resourceData.Description.Value,
-		Type:                 resourceData.StorageType.Value,
+		StorageType:          resourceData.StorageType.Value,
 		StorageAccountName:   resourceData.StorageAccountName.Value,
 		StorageContainerName: resourceData.StorageContainerName.Value,
 		Auth: workspace.DatastoreAuth{
@@ -244,13 +245,36 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 		&newDatastore,
 	)
 	if err != nil {
-		resp.Diagnostics.AddError("Error creating datastore", err.Error())
+		resp.Diagnostics.AddError("Error creating datastore.", err.Error())
 		return
 	}
 
-	result := DatastoreWithAuth{
-		ResourceGroupName:    types.String{Value: resourceData.ResourceGroupName.Value},
-		WorkspaceName:        types.String{Value: resourceData.WorkspaceName.Value},
+	auth := DatastoreAuth{
+		CredentialsType: types.String{Value: createdDatastore.Auth.CredentialsType},
+		// read from resource data since APIs do not return secrets
+		ClientSecret:    resourceData.Auth.ClientSecret,
+		AccountKey:      resourceData.Auth.AccountKey,
+		SqlUserPassword: resourceData.Auth.SqlUserPassword,
+	}
+	if resourceData.Auth.ClientId.Null == true {
+		auth.ClientId = types.String{Null: true}
+	} else {
+		auth.ClientId = types.String{Value: createdDatastore.Auth.ClientId}
+	}
+	if resourceData.Auth.TenantId.Null == true {
+		auth.TenantId = types.String{Null: true}
+	} else {
+		auth.TenantId = types.String{Value: createdDatastore.Auth.TenantId}
+	}
+	if resourceData.Auth.SqlUserName.Null == true {
+		auth.SqlUserName = types.String{Null: true}
+	} else {
+		auth.SqlUserName = types.String{Value: createdDatastore.Auth.SqlUserName}
+	}
+
+	state := DatastoreWithAuth{
+		ResourceGroupName:    resourceData.ResourceGroupName,
+		WorkspaceName:        resourceData.WorkspaceName,
 		ID:                   types.String{Value: createdDatastore.Id},
 		Name:                 types.String{Value: createdDatastore.Name},
 		Description:          types.String{Value: createdDatastore.Description},
@@ -258,16 +282,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 		StorageType:          types.String{Value: createdDatastore.StorageType},
 		StorageAccountName:   types.String{Value: createdDatastore.StorageAccountName},
 		StorageContainerName: types.String{Value: createdDatastore.StorageContainerName},
-		Auth: DatastoreAuth{
-			CredentialsType: types.String{Value: createdDatastore.Auth.CredentialsType},
-			TenantId:        types.String{Value: createdDatastore.Auth.TenantId},
-			ClientId:        types.String{Value: createdDatastore.Auth.ClientId},
-			SqlUserName:     types.String{Value: createdDatastore.Auth.SqlUserName},
-			// read from resource data since APIs do not return secrets
-			ClientSecret:    types.String{Value: resourceData.Auth.ClientSecret.Value},
-			AccountKey:      types.String{Value: resourceData.Auth.AccountKey.Value},
-			SqlUserPassword: types.String{Value: resourceData.Auth.SqlUserPassword.Value},
-		},
+		Auth:                 auth,
 		SystemData: SystemData{
 			CreationDate:         types.String{Value: createdDatastore.SystemData.CreationDate.Format(defaultDateFormat)},
 			CreationUser:         types.String{Value: createdDatastore.SystemData.CreationUser},
@@ -278,7 +293,7 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 		},
 	}
 
-	diags = resp.State.Set(ctx, result)
+	diags = resp.State.Set(ctx, state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
@@ -286,44 +301,57 @@ func (r resourceDatastore) Create(ctx context.Context, req tfsdk.CreateResourceR
 }
 
 func (r resourceDatastore) Read(ctx context.Context, req tfsdk.ReadResourceRequest, resp *tfsdk.ReadResourceResponse) {
-	var resourceData DatastoreWithAuth
+	var state DatastoreWithAuth
 
-	diags := req.State.Get(ctx, &resourceData)
+	diags := req.State.Get(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	datastore, err := r.p.client.GetDatastore(
-		resourceData.ResourceGroupName.Value,
-		resourceData.WorkspaceName.Value,
-		resourceData.Name.Value,
+		state.ResourceGroupName.Value,
+		state.WorkspaceName.Value,
+		state.Name.Value,
 	)
 	if err != nil {
-		msg := fmt.Sprintf("Error retrieving datastore \"%s\"", resourceData.Name.Value)
+		msg := fmt.Sprintf("Error retrieving datastore \"%s\"", state.Name.Value)
 		resp.Diagnostics.AddError(msg, err.Error())
 		return
 	}
 
 	// Update resource data with fetched data
-	resourceData.ID = types.String{Value: datastore.Id}
-	resourceData.Name = types.String{Value: datastore.Name}
-	resourceData.Description = types.String{Value: datastore.Description}
-	resourceData.IsDefault = types.Bool{Value: datastore.IsDefault}
-	resourceData.StorageType = types.String{Value: datastore.StorageType}
-	resourceData.StorageAccountName = types.String{Value: datastore.StorageAccountName}
-	resourceData.StorageContainerName = types.String{Value: datastore.StorageContainerName}
-	resourceData.Auth = DatastoreAuth{
+	updatedAuth := DatastoreAuth{
 		CredentialsType: types.String{Value: datastore.Auth.CredentialsType},
-		TenantId:        types.String{Value: datastore.Auth.TenantId},
-		ClientId:        types.String{Value: datastore.Auth.ClientId},
-		SqlUserName:     types.String{Value: datastore.Auth.SqlUserName},
-		// Use resource data values since APIs do not return secrets
-		ClientSecret:    types.String{Value: resourceData.Auth.ClientSecret.Value},
-		AccountKey:      types.String{Value: resourceData.Auth.AccountKey.Value},
-		SqlUserPassword: types.String{Value: resourceData.Auth.SqlUserPassword.Value},
+		// read from resource data since APIs do not return secrets
+		ClientSecret:    state.Auth.ClientSecret,
+		AccountKey:      state.Auth.AccountKey,
+		SqlUserPassword: state.Auth.SqlUserPassword,
 	}
-	resourceData.SystemData = SystemData{
+	if state.Auth.ClientId.Null == true {
+		updatedAuth.ClientId = types.String{Null: true}
+	} else {
+		updatedAuth.ClientId = types.String{Value: datastore.Auth.ClientId}
+	}
+	if state.Auth.TenantId.Null == true {
+		updatedAuth.TenantId = types.String{Null: true}
+	} else {
+		updatedAuth.TenantId = types.String{Value: datastore.Auth.TenantId}
+	}
+	if state.Auth.SqlUserName.Null == true {
+		updatedAuth.SqlUserName = types.String{Null: true}
+	} else {
+		updatedAuth.SqlUserName = types.String{Value: datastore.Auth.SqlUserName}
+	}
+	state.ID = types.String{Value: datastore.Id}
+	state.Name = types.String{Value: datastore.Name}
+	state.Description = types.String{Value: datastore.Description}
+	state.IsDefault = types.Bool{Value: datastore.IsDefault}
+	state.StorageType = types.String{Value: datastore.StorageType}
+	state.StorageAccountName = types.String{Value: datastore.StorageAccountName}
+	state.StorageContainerName = types.String{Value: datastore.StorageContainerName}
+	state.Auth = updatedAuth
+	state.SystemData = SystemData{
 		CreationDate:         types.String{Value: datastore.SystemData.CreationDate.Format(defaultDateFormat)},
 		CreationUser:         types.String{Value: datastore.SystemData.CreationUser},
 		CreationUserType:     types.String{Value: datastore.SystemData.CreationUserType},
@@ -333,21 +361,94 @@ func (r resourceDatastore) Read(ctx context.Context, req tfsdk.ReadResourceReque
 	}
 
 	// Set entire state
-	diags = resp.State.Set(ctx, &resourceData)
+	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 }
 
-func (r resourceDatastore) Update(ctx context.Context, request tfsdk.UpdateResourceRequest, response *tfsdk.UpdateResourceResponse) {
+func (r resourceDatastore) Update(ctx context.Context, req tfsdk.UpdateResourceRequest, resp *tfsdk.UpdateResourceResponse) {
+	// Retrieve the changes proposed in the execution plan
+	var plan DatastoreWithAuth
+	diags := req.Plan.Get(ctx, &plan)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Retrieve the current state values
+	var state DatastoreWithAuth
+	diags = req.State.Get(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Update the resource on AML
+	patchDatastore := workspace.Datastore{
+		Id:                   state.ID.Value,
+		Name:                 plan.Name.Value,
+		IsDefault:            plan.IsDefault.Value,
+		Description:          plan.Description.Value,
+		StorageType:          plan.StorageType.Value,
+		StorageAccountName:   plan.StorageAccountName.Value,
+		StorageContainerName: plan.StorageContainerName.Value,
+		Auth: workspace.DatastoreAuth{
+			CredentialsType: plan.Auth.CredentialsType.Value,
+			ClientId:        plan.Auth.CredentialsType.Value,
+			TenantId:        plan.Auth.TenantId.Value,
+			ClientSecret:    plan.Auth.ClientSecret.Value,
+			AccountKey:      plan.Auth.AccountKey.Value,
+			SqlUserName:     plan.Auth.SqlUserName.Value,
+			SqlUserPassword: plan.Auth.SqlUserPassword.Value,
+		},
+	}
+	updatedDatastore, err := r.p.client.CreateOrUpdateDatastore(
+		plan.ResourceGroupName.Value,
+		plan.WorkspaceName.Value,
+		&patchDatastore,
+	)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			fmt.Sprintf("Error updating datastore \"%s\".", state.Name.Value),
+			err.Error(),
+		)
+	}
+
+	// Write to state the updated resource
+	newState := DatastoreWithAuth{
+		ResourceGroupName:    types.String{Value: state.ResourceGroupName.Value},
+		WorkspaceName:        types.String{Value: state.WorkspaceName.Value},
+		ID:                   types.String{Value: state.ID.Value},
+		Name:                 types.String{Value: updatedDatastore.Name},
+		Description:          types.String{Value: updatedDatastore.Description},
+		IsDefault:            types.Bool{Value: updatedDatastore.IsDefault},
+		StorageType:          types.String{Value: updatedDatastore.StorageType},
+		StorageAccountName:   types.String{Value: updatedDatastore.StorageAccountName},
+		StorageContainerName: types.String{Value: updatedDatastore.StorageContainerName},
+		Auth: DatastoreAuth{
+			CredentialsType: types.String{Value: updatedDatastore.Auth.CredentialsType},
+			TenantId:        types.String{Value: updatedDatastore.Auth.TenantId},
+			ClientId:        types.String{Value: updatedDatastore.Auth.ClientId},
+			SqlUserName:     types.String{Value: updatedDatastore.Auth.SqlUserName},
+			ClientSecret:    types.String{Value: plan.Auth.ClientSecret.Value},
+			AccountKey:      types.String{Value: plan.Auth.AccountKey.Value},
+			SqlUserPassword: types.String{Value: plan.Auth.SqlUserPassword.Value},
+		},
+		SystemData: SystemData{},
+	}
+	diags = resp.State.Set(ctx, &newState)
+	resp.Diagnostics.Append(diags...)
+	if diags.HasError() {
+		return
+	}
+}
+
+func (r resourceDatastore) Delete(ctx context.Context, req tfsdk.DeleteResourceRequest, resp *tfsdk.DeleteResourceResponse) {
 	panic("implement me")
 }
 
-func (r resourceDatastore) Delete(ctx context.Context, request tfsdk.DeleteResourceRequest, response *tfsdk.DeleteResourceResponse) {
-	panic("implement me")
-}
-
-func (r resourceDatastore) ImportState(ctx context.Context, request tfsdk.ImportResourceStateRequest, response *tfsdk.ImportResourceStateResponse) {
+func (r resourceDatastore) ImportState(ctx context.Context, req tfsdk.ImportResourceStateRequest, resp *tfsdk.ImportResourceStateResponse) {
 	panic("implement me")
 }

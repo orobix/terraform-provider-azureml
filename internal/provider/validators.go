@@ -9,7 +9,7 @@ import (
 
 const (
 	storageAccountNameMaxLength = 24
-	storageAccountNameMinLength = 24
+	storageAccountNameMinLength = 3
 )
 
 func NewDatastoreCredentialsTypeValidator() *DatastoreCredentialsTypeValidator {
