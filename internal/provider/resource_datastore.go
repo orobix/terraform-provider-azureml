@@ -22,8 +22,9 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 		MarkdownDescription: "Single **Datastore**.",
 		Attributes: map[string]tfsdk.Attribute{
 			"id": {
-				Type:     types.StringType,
-				Computed: true,
+				Type:        types.StringType,
+				Computed:    true,
+				Description: "The ID of the datastore.",
 			},
 			"resource_group_name": {
 				Type:     types.StringType,
@@ -31,6 +32,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Validators: []tfsdk.AttributeValidator{
 					StringNotEmptyValidator{},
 				},
+				Description: "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
 			},
 			"workspace_name": {
 				Type:     types.StringType,
@@ -38,6 +40,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Validators: []tfsdk.AttributeValidator{
 					StringNotEmptyValidator{},
 				},
+				Description: "The name of the Azure ML Workspace to which the datastore belongs to.",
 			},
 			"name": {
 				Type:     types.StringType,
@@ -45,14 +48,17 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Validators: []tfsdk.AttributeValidator{
 					StringNotEmptyValidator{},
 				},
+				Description: "The name of the datastore.",
 			},
 			"description": {
-				Type:     types.StringType,
-				Required: true,
+				Type:        types.StringType,
+				Required:    true,
+				Description: "The description of the datastore.",
 			},
 			"is_default": {
-				Type:     types.BoolType,
-				Optional: true,
+				Type:        types.BoolType,
+				Optional:    true,
+				Description: "Is the datastore the default datastore of the Azure ML Workspace?",
 			},
 			"storage_type": {
 				Type:     types.StringType,
@@ -60,6 +66,10 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Validators: []tfsdk.AttributeValidator{
 					NewStorageTypeValidator(),
 				},
+				Description: fmt.Sprintf(
+					"The type of the storage to which the datstore is linked to. Possible values are: %v",
+					NewStorageTypeValidator().allowedTypes,
+				),
 			},
 			"storage_account_name": {
 				Type:     types.StringType,
@@ -68,6 +78,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 					StringNotEmptyValidator{},
 					StorageAccountNameValidator{},
 				},
+				Description: "The name of the Storage Account to which the datastore is linked to.",
 			},
 			"storage_container_name": {
 				Type:     types.StringType,
@@ -75,16 +86,24 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Validators: []tfsdk.AttributeValidator{
 					StringNotEmptyValidator{},
 				},
+				Description: "The name of the Storage Container to which the datastore is linked to.",
 			},
 			"auth": {
 				Required: true,
+				Description: "The credentials for authenticating with the storage linked to the datastore. " +
+					"The authentication methods depends on the underlying storage type of the datastore.",
 				Attributes: tfsdk.SingleNestedAttributes(map[string]tfsdk.Attribute{
 					"credentials_type": {
 						Type:     types.StringType,
 						Required: true,
 						Validators: []tfsdk.AttributeValidator{
-							StringNotEmptyValidator{AttributeIsRequired: true},
+							NewDatastoreCredentialsTypeValidator(),
 						},
+						Description: fmt.Sprintf(
+							"The type of credentials used for authenticating with the underlying storage. "+
+								"Possible values are: %v.",
+							NewDatastoreCredentialsTypeValidator().allowedTypes,
+						),
 					},
 					"tenant_id": {
 						Type:     types.StringType,
@@ -92,6 +111,8 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The ID of the tenant to which the Service Principal used for authenticating " +
+							"belongs to.",
 					},
 					"client_id": {
 						Type:     types.StringType,
@@ -99,6 +120,8 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The application ID of the service principal used for authenticating with the " +
+							"underlying storage of the datastore.",
 					},
 					"client_secret": {
 						Type:      types.StringType,
@@ -107,6 +130,8 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The client secret of the service principal used for authenticating with the " +
+							"underlying storage of the datastore.",
 					},
 					"account_key": {
 						Type:      types.StringType,
@@ -115,6 +140,7 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The primary key of the Storage Account linked to the datastore.",
 					},
 					"sql_user_name": {
 						Type:     types.StringType,
@@ -122,6 +148,8 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The username of the identity used for authenticating with the SQL database linked " +
+							"to the storage account.",
 					},
 					"sql_user_password": {
 						Type:      types.StringType,
@@ -130,6 +158,8 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 						Validators: []tfsdk.AttributeValidator{
 							StringNotEmptyValidator{},
 						},
+						Description: "The password of the identity used for authenticating with the SQL database linked " +
+							"to the storage account.",
 					},
 				}),
 			},
@@ -137,28 +167,34 @@ func (r resourceDatastoreType) GetSchema(ctx context.Context) (tfsdk.Schema, dia
 				Computed: true,
 				Attributes: tfsdk.SingleNestedAttributes(map[string]tfsdk.Attribute{
 					"creation_date": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The timestamp corresponding to the creation of the datastore.",
 					},
 					"creation_user": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The user that created the datastore.",
 					},
 					"creation_user_type": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The kind of user that created the datastore (Service Principal or User).",
 					},
 					"last_modified_date": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The timestamp corresponding to the last update of the datastore.",
 					},
 					"last_modified_user": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The user that last updated the datastore.",
 					},
 					"last_modified_user_type": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The kind of user that last updated the datastore (Service Principal or User).",
 					},
 				}),
 			},

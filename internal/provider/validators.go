@@ -12,6 +12,50 @@ const (
 	storageAccountNameMinLength = 24
 )
 
+func NewDatastoreCredentialsTypeValidator() *DatastoreCredentialsTypeValidator {
+	return &DatastoreCredentialsTypeValidator{
+		allowedTypes: []string{
+			"AccountKey",
+			"Certificate",
+			"None",
+			"Sas",
+			"ServicePrincipal",
+			"SqlAdmin",
+		},
+	}
+}
+
+type DatastoreCredentialsTypeValidator struct {
+	allowedTypes []string
+}
+
+func (d DatastoreCredentialsTypeValidator) Description(ctx context.Context) string {
+	return fmt.Sprintf("Accepted values are: %v.", d.allowedTypes)
+}
+
+func (d DatastoreCredentialsTypeValidator) MarkdownDescription(ctx context.Context) string {
+	return fmt.Sprintf("Accepted values are: %v.", d.allowedTypes)
+}
+
+func (d DatastoreCredentialsTypeValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
+	v, ok := request.AttributeConfig.(types.String)
+	if !ok {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid value.",
+			"Attribute value should be a string.",
+		)
+		return
+	}
+	if !contains(d.allowedTypes, v.Value) {
+		response.Diagnostics.AddAttributeError(
+			request.AttributePath,
+			"Invalid datastore credential type.",
+			fmt.Sprintf("Allowed credentials types are: %v.", d.allowedTypes),
+		)
+	}
+}
+
 func NewStorageTypeValidator() *StorageTypeValidator {
 	return &StorageTypeValidator{
 		allowedTypes: []string{
@@ -32,11 +76,11 @@ type StorageTypeValidator struct {
 }
 
 func (s StorageTypeValidator) Description(ctx context.Context) string {
-	return fmt.Sprintf("Accepted values are: %v", s.allowedTypes)
+	return fmt.Sprintf("Accepted values are: %v.", s.allowedTypes)
 }
 
 func (s StorageTypeValidator) MarkdownDescription(ctx context.Context) string {
-	return fmt.Sprintf("Accepted values are: %v", s.allowedTypes)
+	return fmt.Sprintf("Accepted values are: %v.", s.allowedTypes)
 }
 
 func (s StorageTypeValidator) Validate(ctx context.Context, request tfsdk.ValidateAttributeRequest, response *tfsdk.ValidateAttributeResponse) {
@@ -44,16 +88,16 @@ func (s StorageTypeValidator) Validate(ctx context.Context, request tfsdk.Valida
 	if !ok {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid value",
-			"Attribute value should be a string",
+			"Invalid value.",
+			"Attribute value should be a string.",
 		)
 		return
 	}
 	if !contains(s.allowedTypes, v.Value) {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid storage type",
-			fmt.Sprintf("Allowed storage types are: %v", s.allowedTypes),
+			"Invalid storage type.",
+			fmt.Sprintf("Allowed storage types are: %v.", s.allowedTypes),
 		)
 	}
 }
@@ -89,7 +133,7 @@ func (s StorageAccountNameValidator) Validate(ctx context.Context, request tfsdk
 	if length < storageAccountNameMinLength || length > storageAccountNameMaxLength {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid value",
+			"Invalid value.",
 			fmt.Sprintf(
 				"Storage account name must be between %d and %d characters.",
 				storageAccountNameMinLength,
@@ -103,7 +147,7 @@ func (s StorageAccountNameValidator) Validate(ctx context.Context, request tfsdk
 	if !stringIsOnlyLettersAndDigits(v.Value) {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid value",
+			"Invalid value.",
 			"Storage account name can contain only characters and digits.",
 		)
 		return
@@ -127,8 +171,8 @@ func (s StringNotEmptyValidator) Validate(ctx context.Context, request tfsdk.Val
 	if !ok {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid value",
-			"Attribute value should be a string",
+			"Invalid value.",
+			"Attribute value should be a string.",
 		)
 		return
 	}
@@ -138,7 +182,7 @@ func (s StringNotEmptyValidator) Validate(ctx context.Context, request tfsdk.Val
 	if stringIsEmpty(v.Value) {
 		response.Diagnostics.AddAttributeError(
 			request.AttributePath,
-			"Invalid value",
+			"Invalid value.",
 			"The value must be a non-empty string.",
 		)
 		return

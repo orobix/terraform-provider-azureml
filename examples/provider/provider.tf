@@ -38,7 +38,7 @@ resource "azureml_datastore" "test" {
   name                = "test"
   description         = ""
   storage_type        = "AzureBlob"
-  auth                = {
+  auth = {
     credentials_type = ""
   }
 }

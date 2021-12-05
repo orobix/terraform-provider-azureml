@@ -17,22 +17,22 @@ Single **Datastore**.
 
 ### Required
 
-- **auth** (Attributes) (see [below for nested schema](#nestedatt--auth))
-- **description** (String)
-- **name** (String)
-- **resource_group_name** (String)
-- **workspace_name** (String)
+- **auth** (Attributes) The credentials for authenticating with the storage linked to the datastore. The authentication methods depends on the underlying storage type of the datastore. (see [below for nested schema](#nestedatt--auth))
+- **description** (String) The description of the datastore.
+- **name** (String) The name of the datastore.
+- **resource_group_name** (String) The name of the resource group of the Azure ML Workspace to which the datastore belongs to.
+- **workspace_name** (String) The name of the Azure ML Workspace to which the datastore belongs to.
 
 ### Optional
 
-- **is_default** (Boolean)
-- **storage_account_name** (String)
-- **storage_container_name** (String)
-- **storage_type** (String)
+- **is_default** (Boolean) Is the datastore the default datastore of the Azure ML Workspace?
+- **storage_account_name** (String) The name of the Storage Account to which the datastore is linked to.
+- **storage_container_name** (String) The name of the Storage Container to which the datastore is linked to.
+- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: [AzureFile AzureBlob AzureDataLakeGen1 AzureDataLakeGen2 AzureMySql AzurePostgreSql AzureSqlDatabase GlusterFs]
 
 ### Read-Only
 
-- **id** (String) The ID of this resource.
+- **id** (String) The ID of the datastore.
 - **system_data** (Attributes) (see [below for nested schema](#nestedatt--system_data))
 
 <a id="nestedatt--auth"></a>
@@ -40,12 +40,13 @@ Single **Datastore**.
 
 Required:
 
-- **account_key** (String, Sensitive)
-- **client_id** (String)
-- **client_secret** (String, Sensitive)
-- **credentials_type** (String)
-- **sql_user_name** (String)
-- **sql_user_password** (String, Sensitive)
+- **account_key** (String, Sensitive) The primary key of the Storage Account linked to the datastore.
+- **client_id** (String) The application ID of the service principal used for authenticating with the underlying storage of the datastore.
+- **client_secret** (String, Sensitive) The client secret of the service principal used for authenticating with the underlying storage of the datastore.
+- **credentials_type** (String) The type of credentials used for authenticating with the underlying storage. Possible values are: [AccountKey Certificate None Sas ServicePrincipal SqlAdmin].
+- **sql_user_name** (String) The username of the identity used for authenticating with the SQL database linked to the storage account.
+- **sql_user_password** (String, Sensitive) The password of the identity used for authenticating with the SQL database linked to the storage account.
+- **tenant_id** (String) The ID of the tenant to which the Service Principal used for authenticating belongs to.
 
 
 <a id="nestedatt--system_data"></a>
@@ -53,11 +54,11 @@ Required:
 
 Read-Only:
 
-- **creation_date** (String)
-- **creation_user** (String)
-- **creation_user_type** (String)
-- **last_modified_date** (String)
-- **last_modified_user** (String)
-- **last_modified_user_type** (String)
+- **creation_date** (String) The timestamp corresponding to the creation of the datastore.
+- **creation_user** (String) The user that created the datastore.
+- **creation_user_type** (String) The kind of user that created the datastore (Service Principal or User).
+- **last_modified_date** (String) The timestamp corresponding to the last update of the datastore.
+- **last_modified_user** (String) The user that last updated the datastore.
+- **last_modified_user_type** (String) The kind of user that last updated the datastore (Service Principal or User).
 
 

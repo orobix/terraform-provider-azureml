@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -11,86 +12,111 @@ type dataSourceDatastoresType struct{}
 
 func (d dataSourceDatastoresType) GetSchema(_ context.Context) (tfsdk.Schema, diag.Diagnostics) {
 	return tfsdk.Schema{
-		Description:         "List of Datastores.",
-		MarkdownDescription: "List of **Datastores**.",
+		Description: "Use this resource to fetch the list of of the Datastores belonging to a certain " +
+			"Azure ML Workspace. Authentication credentials are not included in the returned datastore list.",
 		Attributes: map[string]tfsdk.Attribute{
 			"resource_group_name": {
-				Type:     types.StringType,
-				Required: true,
+				Type:        types.StringType,
+				Required:    true,
+				Description: "The name of the resource group of the Azure ML Workspace.",
 			},
 			"workspace_name": {
-				Type:     types.StringType,
-				Required: true,
+				Type:        types.StringType,
+				Required:    true,
+				Description: "The name of the Azure ML Workspace from which the datastores will be fetched.",
 			},
 			"datastores": {
 				Computed: true,
 				Attributes: tfsdk.SetNestedAttributes(map[string]tfsdk.Attribute{
 					"resource_group_name": {
-						Type:     types.StringType,
-						Required: true,
+						Type:        types.StringType,
+						Required:    true,
+						Description: "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
 					},
 					"workspace_name": {
-						Type:     types.StringType,
-						Required: true,
+						Type:        types.StringType,
+						Required:    true,
+						Description: "The name of the Azure ML Workspace to which the datastore belongs to.",
 					},
 					"id": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The ID of the datastore.",
 					},
 					"name": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The name of the datastore.",
 					},
 					"description": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The description of the datastore.",
 					},
 					"is_default": {
-						Type:     types.BoolType,
-						Computed: true,
+						Type:        types.BoolType,
+						Computed:    true,
+						Description: "Is the datastore the default datastore of the Azure ML Workspace?",
 					},
 					"storage_type": {
 						Type:     types.StringType,
 						Computed: true,
+						Description: fmt.Sprintf(
+							"The type of the storage to which the datstore is linked to. Possible values are: %v",
+							NewStorageTypeValidator().allowedTypes,
+						),
 					},
 					"storage_account_name": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The name of the Storage Account to which the datastore is linked to.",
 					},
 					"storage_container_name": {
-						Type:     types.StringType,
-						Computed: true,
+						Type:        types.StringType,
+						Computed:    true,
+						Description: "The name of the Storage Container to which the datastore is linked to.",
 					},
 					"credentials_type": {
 						Type:     types.StringType,
 						Computed: true,
+						Description: fmt.Sprintf(
+							"The type of credentials used for authenticating with the underlying storage. "+
+								"Possible values are: %v.",
+							NewDatastoreCredentialsTypeValidator().allowedTypes,
+						),
 					},
 					"system_data": {
 						Computed: true,
 						Attributes: tfsdk.SingleNestedAttributes(map[string]tfsdk.Attribute{
 							"creation_date": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The timestamp corresponding to the creation of the datastore.",
 							},
 							"creation_user": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The user that created the datastore.",
 							},
 							"creation_user_type": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The kind of user that created the datastore (Service Principal or User).",
 							},
 							"last_modified_date": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The timestamp corresponding to the last update of the datastore.",
 							},
 							"last_modified_user": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The user that last updated the datastore.",
 							},
 							"last_modified_user_type": {
-								Type:     types.StringType,
-								Computed: true,
+								Type:        types.StringType,
+								Computed:    true,
+								Description: "The kind of user that last updated the datastore (Service Principal or User).",
 							},
 						}),
 					},
