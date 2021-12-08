@@ -17,7 +17,7 @@ provider "azureml" {
 resource "azureml_datastore" "example" {
   resource_group_name = var.resource_group_name
   workspace_name      = var.workspace_name
-  name                = "example"
+  name                = "example2"
   description         = "example"
   storage_type        = "AzureBlob"
 
@@ -26,8 +26,8 @@ resource "azureml_datastore" "example" {
 
   auth = {
     credentials_type = "ServicePrincipal"
-    client_id        = var.client_id
-    client_secret    = var.client_secret
-    tenant_id        = var.tenant_id
+    #client_id        = var.client_id
+    #client_secret    = var.client_secret
+    #tenant_id        = var.tenant_id
   }
 }

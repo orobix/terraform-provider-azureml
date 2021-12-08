@@ -320,45 +320,8 @@ func (r resourceDatastore) Read(ctx context.Context, req tfsdk.ReadResourceReque
 		return
 	}
 
-	// Update resource data with fetched data
-	updatedAuth := DatastoreAuth{
-		CredentialsType: types.String{Value: datastore.Auth.CredentialsType},
-		// read from resource data since APIs do not return secrets
-		ClientSecret:    state.Auth.ClientSecret,
-		AccountKey:      state.Auth.AccountKey,
-		SqlUserPassword: state.Auth.SqlUserPassword,
-	}
-	if state.Auth.ClientId.Null == true {
-		updatedAuth.ClientId = types.String{Null: true}
-	} else {
-		updatedAuth.ClientId = types.String{Value: datastore.Auth.ClientId}
-	}
-	if state.Auth.TenantId.Null == true {
-		updatedAuth.TenantId = types.String{Null: true}
-	} else {
-		updatedAuth.TenantId = types.String{Value: datastore.Auth.TenantId}
-	}
-	if state.Auth.SqlUserName.Null == true {
-		updatedAuth.SqlUserName = types.String{Null: true}
-	} else {
-		updatedAuth.SqlUserName = types.String{Value: datastore.Auth.SqlUserName}
-	}
-	state.ID = types.String{Value: datastore.Id}
-	state.Name = types.String{Value: datastore.Name}
-	state.Description = types.String{Value: datastore.Description}
-	state.IsDefault = types.Bool{Value: datastore.IsDefault}
-	state.StorageType = types.String{Value: datastore.StorageType}
-	state.StorageAccountName = types.String{Value: datastore.StorageAccountName}
-	state.StorageContainerName = types.String{Value: datastore.StorageContainerName}
-	state.Auth = updatedAuth
-	state.SystemData = SystemData{
-		CreationDate:         types.String{Value: datastore.SystemData.CreationDate.Format(defaultDateFormat)},
-		CreationUser:         types.String{Value: datastore.SystemData.CreationUser},
-		CreationUserType:     types.String{Value: datastore.SystemData.CreationUserType},
-		LastModifiedDate:     types.String{Value: datastore.SystemData.LastModifiedDate.Format(defaultDateFormat)},
-		LastModifiedUser:     types.String{Value: datastore.SystemData.LastModifiedUser},
-		LastModifiedUserType: types.String{Value: datastore.SystemData.LastModifiedUserType},
-	}
+	// Update state with fetched data
+	state = mergeToDatastoreWithAuth(&state, datastore)
 
 	// Set entire state
 	diags = resp.State.Set(ctx, &state)
@@ -370,7 +333,7 @@ func (r resourceDatastore) Read(ctx context.Context, req tfsdk.ReadResourceReque
 
 func (r resourceDatastore) Update(ctx context.Context, req tfsdk.UpdateResourceRequest, resp *tfsdk.UpdateResourceResponse) {
 	// Retrieve the changes proposed in the execution plan
-	var plan DatastoreWithAuth
+	var plan ConfigReadableDatastoreWithAuth
 	diags := req.Plan.Get(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 	if resp.Diagnostics.HasError() {
@@ -414,30 +377,11 @@ func (r resourceDatastore) Update(ctx context.Context, req tfsdk.UpdateResourceR
 			fmt.Sprintf("Error updating datastore \"%s\".", state.Name.Value),
 			err.Error(),
 		)
+		return
 	}
 
 	// Write to state the updated resource
-	newState := DatastoreWithAuth{
-		ResourceGroupName:    types.String{Value: state.ResourceGroupName.Value},
-		WorkspaceName:        types.String{Value: state.WorkspaceName.Value},
-		ID:                   types.String{Value: state.ID.Value},
-		Name:                 types.String{Value: updatedDatastore.Name},
-		Description:          types.String{Value: updatedDatastore.Description},
-		IsDefault:            types.Bool{Value: updatedDatastore.IsDefault},
-		StorageType:          types.String{Value: updatedDatastore.StorageType},
-		StorageAccountName:   types.String{Value: updatedDatastore.StorageAccountName},
-		StorageContainerName: types.String{Value: updatedDatastore.StorageContainerName},
-		Auth: DatastoreAuth{
-			CredentialsType: types.String{Value: updatedDatastore.Auth.CredentialsType},
-			TenantId:        types.String{Value: updatedDatastore.Auth.TenantId},
-			ClientId:        types.String{Value: updatedDatastore.Auth.ClientId},
-			SqlUserName:     types.String{Value: updatedDatastore.Auth.SqlUserName},
-			ClientSecret:    types.String{Value: plan.Auth.ClientSecret.Value},
-			AccountKey:      types.String{Value: plan.Auth.AccountKey.Value},
-			SqlUserPassword: types.String{Value: plan.Auth.SqlUserPassword.Value},
-		},
-		SystemData: SystemData{},
-	}
+	newState := mergeToDatastoreWithAuth(&state, updatedDatastore)
 	diags = resp.State.Set(ctx, &newState)
 	resp.Diagnostics.Append(diags...)
 	if diags.HasError() {
