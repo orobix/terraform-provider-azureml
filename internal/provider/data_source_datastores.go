@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"strconv"
-	"time"
 )
 
 func dataSourceDatastores() *schema.Resource {
@@ -129,6 +128,7 @@ func dataSourceDatastores() *schema.Resource {
 func dataSourceDatastoresRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*apiClient)
+	d.GetRawConfig()
 	resourceGroupName := d.Get("resource_group_name").(string)
 	workspaceName := d.Get("workspace_name").(string)
 
@@ -155,8 +155,12 @@ func dataSourceDatastoresRead(ctx context.Context, d *schema.ResourceData, meta 
 	if err := d.Set("datastores", values); err != nil {
 		return diag.FromErr(err)
 	}
-	// always run
-	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
+	id, err := hash(fmt.Sprintf("%s%s%d", resourceGroupName, workspaceName, len(values)))
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId(strconv.Itoa(int(id)))
 
 	return diags
 }
