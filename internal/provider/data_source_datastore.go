@@ -3,170 +3,165 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-go/tftypes"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type dataSourceDatastoreType struct{}
-
-func (d dataSourceDatastoreType) GetSchema(_ context.Context) (tfsdk.Schema, diag.Diagnostics) {
-	return tfsdk.Schema{
+func dataSourceDatastore() *schema.Resource {
+	return &schema.Resource{
 		Description: "Use this resource to access the information of a specific Datastore of a certain Azure ML " +
 			"Workspace. Authentication credentials are not included in the provided information.",
-		Attributes: map[string]tfsdk.Attribute{
+
+		ReadContext: dataSourceDatastoreRead,
+
+		Schema: map[string]*schema.Schema{
 			"resource_group_name": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
 			},
 			"workspace_name": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the Azure ML Workspace to which the datastore belongs to.",
 			},
 			"name": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The name of the datastore.",
 			},
 			"id": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The ID of the datastore.",
 			},
 			"description": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The description of the datastore.",
 			},
 			"is_default": {
-				Type:        types.BoolType,
+				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: "Is the datastore the default datastore of the Azure ML Workspace?",
 			},
 			"storage_type": {
-				Type:     types.StringType,
+				Type:     schema.TypeString,
 				Computed: true,
 				Description: fmt.Sprintf(
 					"The type of the storage to which the datstore is linked to. Possible values are: %v",
-					NewStorageTypeValidator().allowedTypes,
+					//NewStorageTypeValidator().allowedTypes,
 				),
 			},
 			"storage_account_name": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The name of the Storage Account to which the datastore is linked to.",
 			},
 			"storage_container_name": {
-				Type:        types.StringType,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The name of the Storage Container to which the datastore is linked to.",
 			},
 			"credentials_type": {
-				Type:     types.StringType,
+				Type:     schema.TypeString,
 				Computed: true,
 				Description: fmt.Sprintf(
-					"The type of credentials used for authenticating with the underlying storage. "+
-						"Possible values are: %v.",
-					NewDatastoreCredentialsTypeValidator().allowedTypes,
+					"The type of credentials used for authenticating with the underlying storage. ",
+					//NewDatastoreCredentialsTypeValidator().allowedTypes,
 				),
 			},
-			"system_data": {
-				Computed: true,
-				Attributes: tfsdk.SingleNestedAttributes(map[string]tfsdk.Attribute{
-					"creation_date": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The timestamp corresponding to the creation of the datastore.",
-					},
-					"creation_user": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The user that created the datastore.",
-					},
-					"creation_user_type": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The kind of user that created the datastore (Service Principal or User).",
-					},
-					"last_modified_date": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The timestamp corresponding to the last update of the datastore.",
-					},
-					"last_modified_user": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The user that last updated the datastore.",
-					},
-					"last_modified_user_type": {
-						Type:        types.StringType,
-						Computed:    true,
-						Description: "The kind of user that last updated the datastore (Service Principal or User).",
-					},
-				}),
+			"creation_date": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The timestamp corresponding to the creation of the datastore.",
+			},
+			"creation_user": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The user that created the datastore.",
+			},
+			"creation_user_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The kind of user that created the datastore (Service Principal or User).",
+			},
+			"last_modified_date": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The timestamp corresponding to the last update of the datastore.",
+			},
+			"last_modified_user": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The user that last updated the datastore.",
+			},
+			"last_modified_user_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The kind of user that last updated the datastore (Service Principal or User).",
 			},
 		},
-	}, nil
-}
-
-func (d dataSourceDatastoreType) NewDataSource(_ context.Context, p tfsdk.Provider) (tfsdk.DataSource, diag.Diagnostics) {
-	return dataSourceDatastore{
-		p: *(p.(*provider)),
-	}, nil
-}
-
-type dataSourceDatastore struct {
-	p provider
-}
-
-func (ds dataSourceDatastore) Read(ctx context.Context, req tfsdk.ReadDataSourceRequest, resp *tfsdk.ReadDataSourceResponse) {
-	var resourceData ConfigReadableDatastore
-
-	diags := req.Config.Get(ctx, &resourceData)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
 	}
+}
 
-	datastore, err := ds.p.client.GetDatastore(
-		resourceData.ResourceGroupName.Value,
-		resourceData.WorkspaceName.Value,
-		resourceData.Name.Value,
-	)
+func dataSourceDatastoreRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	client := meta.(*apiClient)
+	name := d.Get("name").(string)
+	resourceGroupName := d.Get("resource_group_name").(string)
+	workspaceName := d.Get("workspace_name").(string)
+
+	ds, err := client.ws.GetDatastore(resourceGroupName, workspaceName, name)
 	if err != nil {
-		msg := fmt.Sprintf("Error retrieving datastore \"%s\".", resourceData.Name.Value)
-		resp.Diagnostics.AddError(msg, err.Error())
-		return
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("Error retrieving datastore %s", name),
+			Detail:   err.Error(),
+		})
+		return diags
 	}
 
-	// Update resource data with fetched data
-	resourceData.ID = types.String{Value: datastore.Id}
-	resourceData.Name = types.String{Value: datastore.Name}
-	resourceData.Description = types.String{Value: datastore.Description}
-	resourceData.IsDefault = types.Bool{Value: datastore.IsDefault}
-	resourceData.StorageType = types.String{Value: datastore.StorageType}
-	resourceData.StorageAccountName = types.String{Value: datastore.StorageAccountName}
-	resourceData.StorageContainerName = types.String{Value: datastore.StorageContainerName}
-	resourceData.CredentialsType = types.String{Value: datastore.Auth.CredentialsType}
-
-	// Set entire state
-	diags = resp.State.Set(ctx, &resourceData)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
+	if err := d.Set("description", ds.Description); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("is_default", ds.IsDefault); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("storage_type", ds.StorageType); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("storage_account_name", ds.StorageAccountName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("storage_container_name", ds.StorageContainerName); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("credentials_type", ds.Auth.CredentialsType); err != nil {
+		return diag.FromErr(err)
 	}
 
-	// Update state with object attributes
-	systemData := SystemData{
-		CreationDate:         types.String{Value: datastore.SystemData.CreationDate.Format(defaultDateFormat)},
-		CreationUser:         types.String{Value: datastore.SystemData.CreationUser},
-		CreationUserType:     types.String{Value: datastore.SystemData.CreationUserType},
-		LastModifiedDate:     types.String{Value: datastore.SystemData.LastModifiedDate.Format(defaultDateFormat)},
-		LastModifiedUser:     types.String{Value: datastore.SystemData.LastModifiedUser},
-		LastModifiedUserType: types.String{Value: datastore.SystemData.LastModifiedUserType},
+	if err := d.Set("creation_date", ds.SystemData.CreationDate.Format(defaultDateFormat)); err != nil {
+		return diag.FromErr(err)
 	}
-	resp.State.SetAttribute(ctx, tftypes.NewAttributePath().WithAttributeName("system_data"), systemData)
+	if err := d.Set("creation_user", ds.SystemData.CreationUser); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("creation_user_type", ds.SystemData.CreationUserType); err != nil {
+		return diag.FromErr(err)
+	}
+
+	if err := d.Set("last_modified_date", ds.SystemData.CreationDate.Format(defaultDateFormat)); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("last_modified_user", ds.SystemData.LastModifiedUser); err != nil {
+		return diag.FromErr(err)
+	}
+	if err := d.Set("last_modified_user_type", ds.SystemData.LastModifiedUserType); err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(ds.Id)
+
+	return diags
 }
