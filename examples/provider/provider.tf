@@ -14,13 +14,21 @@ provider "azureml" {
   subscription_id = var.subscription_id
 }
 
-data "azureml_datastore" "test" {
+data "azureml_datastore" "datastore" {
   resource_group_name = var.resource_group_name
   workspace_name      = var.workspace_name
   name = "test"
 }
-output "test" {
-  value = data.azureml_datastore.test
+output "datastore" {
+  value = data.azureml_datastore.datastore
+}
+
+data "azureml_datastores" "datastores" {
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+}
+output "datastores" {
+  value = data.azureml_datastores.datastores
 }
 #
 #resource "azureml_datastore" "example" {

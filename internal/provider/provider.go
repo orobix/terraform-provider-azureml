@@ -51,7 +51,8 @@ func New(version string) func() *schema.Provider {
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
-				"azureml_datastore": dataSourceDatastore(),
+				"azureml_datastore":  dataSourceDatastore(),
+				"azureml_datastores": dataSourceDatastores(),
 			},
 			ResourcesMap: map[string]*schema.Resource{},
 		}
