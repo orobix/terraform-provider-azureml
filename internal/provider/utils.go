@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"hash/fnv"
 	"regexp"
 	"strings"
 )
@@ -21,4 +22,13 @@ func stringIsEmpty(s string) bool {
 func stringIsOnlyLettersAndDigits(s string) bool {
 	res, _ := regexp.MatchString("^[A-Za-z0-9]*$", s)
 	return res
+}
+
+func hash(s string) (uint32, error) {
+	h := fnv.New32a()
+	_, err := h.Write([]byte(s))
+	if err != nil {
+		return 0, err
+	}
+	return h.Sum32(), nil
 }

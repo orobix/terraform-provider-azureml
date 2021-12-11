@@ -17,7 +17,7 @@ provider "azureml" {
 data "azureml_datastore" "datastore" {
   resource_group_name = var.resource_group_name
   workspace_name      = var.workspace_name
-  name = "test"
+  name                = "test"
 }
 output "datastore" {
   value = data.azureml_datastore.datastore
@@ -27,24 +27,21 @@ data "azureml_datastores" "datastores" {
   resource_group_name = var.resource_group_name
   workspace_name      = var.workspace_name
 }
-output "datastores" {
-  value = data.azureml_datastores.datastores
+
+resource "azureml_datastore" "example" {
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+  name                = "example2"
+  description         = "example"
+  storage_type        = "AzureBlob"
+
+  storage_account_name   = "pippo"
+  storage_container_name = "example"
+
+  auth {
+    credentials_type = "ServicePrincipal"
+    client_id        = var.client_id
+    client_secret    = var.client_secret
+    tenant_id        = var.tenant_id
+  }
 }
-#
-#resource "azureml_datastore" "example" {
-#  resource_group_name = var.resource_group_name
-#  workspace_name      = var.workspace_name
-#  name                = "example2"
-#  description         = "example"
-#  storage_type        = "AzureBlob"
-#
-#  storage_account_name   = "example"
-#  storage_container_name = "example"
-#
-#  auth = {
-#    credentials_type = "ServicePrincipal"
-#    client_id        = var.client_id
-#    client_secret    = var.client_secret
-#    tenant_id        = var.tenant_id
-#  }
-#}

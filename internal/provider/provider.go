@@ -54,7 +54,9 @@ func New(version string) func() *schema.Provider {
 				"azureml_datastore":  dataSourceDatastore(),
 				"azureml_datastores": dataSourceDatastores(),
 			},
-			ResourcesMap: map[string]*schema.Resource{},
+			ResourcesMap: map[string]*schema.Resource{
+				"azureml_datastore": resourceDatastore(),
+			},
 		}
 		p.ConfigureContextFunc = configure(version, p)
 		return p

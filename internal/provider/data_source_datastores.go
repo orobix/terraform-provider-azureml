@@ -128,7 +128,6 @@ func dataSourceDatastores() *schema.Resource {
 func dataSourceDatastoresRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	client := meta.(*apiClient)
-	d.GetRawConfig()
 	resourceGroupName := d.Get("resource_group_name").(string)
 	workspaceName := d.Get("workspace_name").(string)
 
