@@ -1,11 +1,3 @@
-# Terraform Provider for Azure Machine Learning
-
-Terraform provider for managing [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/) Workspaces. 
-
-## Usage examples
-
-### Initialize the provider
-```hcl
 terraform {
   required_providers {
     azureml = {
@@ -21,18 +13,29 @@ provider "azureml" {
   tenant_id       = var.tenant_id
   subscription_id = var.subscription_id
 }
-```
 
-### Configure a datastore
-```hcl
+data "azureml_datastore" "datastore" {
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+  name                = "test"
+}
+output "datastore" {
+  value = data.azureml_datastore.datastore
+}
+
+data "azureml_datastores" "datastores" {
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+}
+
 resource "azureml_datastore" "example" {
-  resource_group_name = "rg-name"
-  workspace_name      = "ws-name"
-  name                = "example"
+  resource_group_name = var.resource_group_name
+  workspace_name      = var.workspace_name
+  name                = "example2"
   description         = "example"
   storage_type        = "AzureBlob"
 
-  storage_account_name   = "example"
+  storage_account_name   = "pippo"
   storage_container_name = "example"
 
   auth {
@@ -42,21 +45,3 @@ resource "azureml_datastore" "example" {
     tenant_id        = var.tenant_id
   }
 }
-```
-
-## Provider development quickstart
-
-### Build the provider
-```shell
-make build
-```
-
-### Install the provider on your local machine
-```shell
-make install
-```
-
-### Generate the provider documentation
-```shell
-go generate
-```
