@@ -1,21 +1,62 @@
-# Terraform Provider Azure Machine Learning
+# Terraform Provider for Azure Machine Learning
 
-Run the following command to build the provider
+Terraform provider for managing [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/) Workspaces. 
 
-```shell
-go build -o terraform-provider-azureml
+## Usage examples
+
+### Initialize the provider
+```hcl
+terraform {
+  required_providers {
+    azureml = {
+      source  = "registry.terraform.io/zanotti/azureml"
+      version = "0.0.1"
+    }
+  }
+}
+
+provider "azureml" {
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
+  subscription_id = var.subscription_id
+}
 ```
 
-## Test sample configuration
+### Configure a datastore
+```hcl
+resource "azureml_datastore" "example" {
+  resource_group_name = "rg-name"
+  workspace_name      = "ws-name"
+  name                = "example"
+  description         = "example"
+  storage_type        = "AzureBlob"
 
-First, build and install the provider.
+  storage_account_name   = "example"
+  storage_container_name = "example"
 
+  auth {
+    credentials_type = "ServicePrincipal"
+    client_id        = var.client_id
+    client_secret    = var.client_secret
+    tenant_id        = var.tenant_id
+  }
+}
+```
+
+## Provider development quickstart
+
+### Build the provider
+```shell
+make build
+```
+
+### Install the provider on your local machine
 ```shell
 make install
 ```
 
-Then, run the following command to initialize the workspace and apply the sample configuration.
-
+### Generate the provider documentation
 ```shell
-terraform init && terraform apply
+go generate
 ```
