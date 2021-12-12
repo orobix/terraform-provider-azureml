@@ -40,7 +40,7 @@ resource "azureml_datastore" "example" {
 - **auth** (Block Set, Min: 1, Max: 1) (see [below for nested schema](#nestedblock--auth))
 - **name** (String) The name of the datastore.
 - **resource_group_name** (String) The name of the resource group of the Azure ML Workspace to which the datastore belongs to.
-- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: %!v(MISSING)
+- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: ["AzureFile" "AzureBlob" "AzureDataLakeGen1" "AzureDataLakeGen2" "AzureMySql" "AzurePostgreSql" "AzureSqlDatabase" "GlusterFs"]
 - **workspace_name** (String) The name of the Azure ML Workspace to which the datastore belongs to.
 
 ### Optional
@@ -65,7 +65,7 @@ resource "azureml_datastore" "example" {
 
 Required:
 
-- **credentials_type** (String) The type of credentials used for authenticating with the underlying storage. Possible values are: %!v(MISSING).
+- **credentials_type** (String) The type of credentials used for authenticating with the underlying storage. Possible values are: ["AccountKey" "Certificate" "None" "Sas" "ServicePrincipal" "SqlAdmin"].
 
 Optional:
 
