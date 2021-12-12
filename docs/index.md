@@ -18,7 +18,7 @@ Principal specific to Terraform.
 terraform {
   required_providers {
     azureml = {
-      source  = "registry.terraform.io/zanotti/azureml"
+      source  = "registry.terraform.io/Telemaco019/azureml"
       version = "0.0.1"
     }
   }

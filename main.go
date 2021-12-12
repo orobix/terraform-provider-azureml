@@ -36,7 +36,7 @@ func main() {
 	opts := &plugin.ServeOpts{ProviderFunc: provider.New(version)}
 
 	if debugMode {
-		err := plugin.Debug(context.Background(), "registry.terraform.io/zanotti/azureml", opts)
+		err := plugin.Debug(context.Background(), "registry.terraform.io/Telemaco019/azureml", opts)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
