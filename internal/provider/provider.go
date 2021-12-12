@@ -5,6 +5,7 @@ import (
 	"github.com/Telemaco019/azureml-go-sdk/workspace"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"time"
 )
 
@@ -33,21 +34,29 @@ func New(version string) func() *schema.Provider {
 		p := &schema.Provider{
 			Schema: map[string]*schema.Schema{
 				"client_id": {
-					Type:     schema.TypeString,
-					Required: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.StringIsNotEmpty,
+					Description:  "The application ID of the Service Principal used for authenticating with Azure Machine Learning.",
 				},
 				"client_secret": {
-					Type:      schema.TypeString,
-					Required:  true,
-					Sensitive: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					Sensitive:    true,
+					ValidateFunc: validation.StringIsNotEmpty,
+					Description:  "The client secret of the Service Principal used for authenticating with Azure Machine Learning.",
 				},
 				"tenant_id": {
-					Type:     schema.TypeString,
-					Required: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.StringIsNotEmpty,
+					Description:  "The ID of the home Tenant of the Service Principal used for authenticating with Azure Machine Learning.",
 				},
 				"subscription_id": {
-					Type:     schema.TypeString,
-					Required: true,
+					Type:         schema.TypeString,
+					Required:     true,
+					ValidateFunc: validation.StringIsNotEmpty,
+					Description:  "The Azure subscription ID on which the provider will operate.",
 				},
 			},
 			DataSourcesMap: map[string]*schema.Resource{
