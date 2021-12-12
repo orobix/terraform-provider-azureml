@@ -57,8 +57,8 @@ func dataSourceDatastore() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 				Description: fmt.Sprintf(
-					"The type of the storage to which the datstore is linked to. Possible values are: %v",
-					//NewStorageTypeValidator().allowedTypes,
+					"The type of the storage to which the datstore is linked to. Possible values are: %+q",
+					GetAllowedStorageTypes(),
 				),
 			},
 			"storage_account_name": {
