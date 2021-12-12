@@ -69,8 +69,8 @@ func dataSourceDatastores() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 							Description: fmt.Sprintf(
-								"The type of the storage to which the datstore is linked to. Possible values are: %v",
-								//NewStorageTypeValidator().allowedTypes,
+								"The type of the storage to which the datstore is linked to. Possible values are: %+q",
+								GetAllowedStorageTypes(),
 							),
 						},
 						"storage_account_name": {
@@ -87,8 +87,8 @@ func dataSourceDatastores() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 							Description: fmt.Sprintf(
-								"The type of credentials used for authenticating with the underlying storage. ",
-								//NewDatastoreCredentialsTypeValidator().allowedTypes,
+								"The type of credentials used for authenticating with the underlying storage. Possible values are: %+q",
+								GetAllowedCredentialTypes(),
 							),
 						},
 						"creation_date": {
