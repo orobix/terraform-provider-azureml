@@ -6,6 +6,7 @@ import (
 	"github.com/Telemaco019/azureml-go-sdk/workspace"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"time"
 )
 
@@ -20,22 +21,25 @@ func resourceDatastore() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"resource_group_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
+				ForceNew:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"workspace_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the Azure ML Workspace to which the datastore belongs to.",
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the Azure ML Workspace to which the datastore belongs to.",
+				ForceNew:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the datastore.",
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the datastore.",
+				ForceNew:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"id": {
 				Type:        schema.TypeString,
@@ -59,22 +63,25 @@ func resourceDatastore() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				Description: fmt.Sprintf(
-					"The type of the storage to which the datstore is linked to. Possible values are: %v",
-					//NewStorageTypeValidator().allowedTypes,
+					"The type of the storage to which the datstore is linked to. Possible values are: %+q",
+					GetAllowedStorageTypes(),
 				),
-				ForceNew: true,
+				ForceNew:     true,
+				ValidateFunc: IsValidStorageType,
 			},
 			"storage_account_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The name of the Storage Account to which the datastore is linked to.",
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The name of the Storage Account to which the datastore is linked to.",
+				ForceNew:     true,
+				ValidateFunc: IsValidStorageAccountName,
 			},
 			"storage_container_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The name of the Storage Container to which the datastore is linked to.",
-				ForceNew:    true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				Description:  "The name of the Storage Container to which the datastore is linked to.",
+				ForceNew:     true,
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"creation_date": {
 				Type:        schema.TypeString,
@@ -116,10 +123,11 @@ func resourceDatastore() *schema.Resource {
 							Type:     schema.TypeString,
 							Required: true,
 							Description: fmt.Sprintf(
-								"The type of credentials used for authenticating with the underlying storage. " +
-									"Possible values are: %v.",
+								"The type of credentials used for authenticating with the underlying storage. Possible values are: %+q.",
+								GetAllowedCredentialTypes(),
 							),
-							ForceNew: true,
+							ForceNew:     true,
+							ValidateFunc: IsValidCredentialsType,
 						},
 						"tenant_id": {
 							Type:     schema.TypeString,

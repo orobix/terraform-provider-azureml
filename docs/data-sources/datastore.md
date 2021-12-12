@@ -30,25 +30,18 @@ data "azureml_datastores" "example" {
 
 ### Read-Only
 
-- **credentials_type** (String) The type of credentials used for authenticating with the underlying storage. Possible values are: [AccountKey Certificate None Sas ServicePrincipal SqlAdmin].
-- **description** (String) The description of the datastore.
-- **id** (String) The ID of the datastore.
-- **is_default** (Boolean) Is the datastore the default datastore of the Azure ML Workspace?
-- **storage_account_name** (String) The name of the Storage Account to which the datastore is linked to.
-- **storage_container_name** (String) The name of the Storage Container to which the datastore is linked to.
-- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: [AzureFile AzureBlob AzureDataLakeGen1 AzureDataLakeGen2 AzureMySql AzurePostgreSql AzureSqlDatabase GlusterFs]
-- **system_data** (Attributes) (see [below for nested schema](#nestedatt--system_data))
-
-<a id="nestedatt--system_data"></a>
-### Nested Schema for `system_data`
-
-Read-Only:
-
 - **creation_date** (String) The timestamp corresponding to the creation of the datastore.
 - **creation_user** (String) The user that created the datastore.
 - **creation_user_type** (String) The kind of user that created the datastore (Service Principal or User).
+- **credentials_type** (String) The type of credentials used for authenticating with the underlying storage.
+- **description** (String) The description of the datastore.
+- **id** (String) The ID of the datastore.
+- **is_default** (Boolean) Is the datastore the default datastore of the Azure ML Workspace?
 - **last_modified_date** (String) The timestamp corresponding to the last update of the datastore.
 - **last_modified_user** (String) The user that last updated the datastore.
 - **last_modified_user_type** (String) The kind of user that last updated the datastore (Service Principal or User).
+- **storage_account_name** (String) The name of the Storage Account to which the datastore is linked to.
+- **storage_container_name** (String) The name of the Storage Container to which the datastore is linked to.
+- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: %!v(MISSING)
 
 

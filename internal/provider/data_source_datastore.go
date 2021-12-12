@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func dataSourceDatastore() *schema.Resource {
@@ -16,19 +17,22 @@ func dataSourceDatastore() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"resource_group_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the resource group of the Azure ML Workspace to which the datastore belongs to.",
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"workspace_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the Azure ML Workspace to which the datastore belongs to.",
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the Azure ML Workspace to which the datastore belongs to.",
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of the datastore.",
+				Type:         schema.TypeString,
+				Required:     true,
+				Description:  "The name of the datastore.",
+				ValidateFunc: validation.StringIsNotEmpty,
 			},
 			"id": {
 				Type:        schema.TypeString,

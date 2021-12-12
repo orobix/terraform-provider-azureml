@@ -1,5 +1,10 @@
 package provider
 
+import (
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
+)
+
 //
 //import (
 //	"context"
@@ -8,20 +13,39 @@ package provider
 //	"github.com/hashicorp/terraform-plugin-framework/types"
 //)
 //
-//const (
-//	storageAccountNameMaxLength = 24
-//	storageAccountNameMinLength = 3
-//)
+const (
+	storageAccountNameMaxLength = 24
+	storageAccountNameMinLength = 3
+)
+
+func GetAllowedStorageTypes() []string {
+	return []string{
+		"AzureFile",
+		"AzureBlob",
+		"AzureDataLakeGen1",
+		"AzureDataLakeGen2",
+		"AzureMySql",
+		"AzurePostgreSql",
+		"AzureSqlDatabase",
+		"GlusterFs",
+	}
+}
+
+func GetAllowedCredentialTypes() []string {
+	return []string{
+		"AccountKey",
+		"Certificate",
+		"None",
+		"Sas",
+		"ServicePrincipal",
+		"SqlAdmin",
+	}
+}
+
 //
 //func NewDatastoreCredentialsTypeValidator() *DatastoreCredentialsTypeValidator {
 //	return &DatastoreCredentialsTypeValidator{
 //		allowedTypes: []string{
-//			"AccountKey",
-//			"Certificate",
-//			"None",
-//			"Sas",
-//			"ServicePrincipal",
-//			"SqlAdmin",
 //		},
 //	}
 //}
@@ -60,14 +84,6 @@ package provider
 //func NewStorageTypeValidator() *StorageTypeValidator {
 //	return &StorageTypeValidator{
 //		allowedTypes: []string{
-//			"AzureFile",
-//			"AzureBlob",
-//			"AzureDataLakeGen1",
-//			"AzureDataLakeGen2",
-//			"AzureMySql",
-//			"AzurePostgreSql",
-//			"AzureSqlDatabase",
-//			"GlusterFs",
 //		},
 //	}
 //}
@@ -189,3 +205,44 @@ package provider
 //		return
 //	}
 //}
+
+func IsValidStorageType(val interface{}, key string) (warns []string, errs []error) {
+	v := val.(string)
+	if !contains(GetAllowedStorageTypes(), v) {
+		errs = append(errs, fmt.Errorf("%q allowed values are: %+q", key, GetAllowedStorageTypes()))
+	}
+	return
+}
+
+func IsValidCredentialsType(val interface{}, key string) (warns []string, errs []error) {
+	v := val.(string)
+	if !contains(GetAllowedCredentialTypes(), v) {
+		errs = append(errs, fmt.Errorf("%q allowed values are: %+q", key, GetAllowedCredentialTypes()))
+	}
+	return
+}
+
+func IsValidStorageAccountName(val interface{}, key string) (warns []string, errs []error) {
+	v := val.(string)
+
+	// Check string is not empty
+	warns, errs = validation.StringIsNotEmpty(val, key)
+
+	// Check length
+	length := len(v)
+	if length < storageAccountNameMinLength || length > storageAccountNameMaxLength {
+		errs = append(errs, fmt.Errorf(
+			"%q must be between %d and %d characters",
+			key,
+			storageAccountNameMinLength,
+			storageAccountNameMaxLength,
+		))
+	}
+
+	// Check format
+	if !stringIsOnlyLettersAndDigits(v) {
+		errs = append(errs, fmt.Errorf("%q can contain only characters and digits", key))
+	}
+
+	return
+}
