@@ -19,6 +19,10 @@ func resourceDatastore() *schema.Resource {
 		UpdateContext: resourceDatastoreUpdate,
 		DeleteContext: resourceDatastoreDelete,
 
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"resource_group_name": {
 				Type:         schema.TypeString,
