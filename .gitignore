@@ -42,3 +42,5 @@ backend.tfvars
 .terraform.lock.hcl
 
 .idea/
+
+examples/tests

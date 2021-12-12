@@ -42,6 +42,6 @@ data "azureml_datastores" "example" {
 - **last_modified_user_type** (String) The kind of user that last updated the datastore (Service Principal or User).
 - **storage_account_name** (String) The name of the Storage Account to which the datastore is linked to.
 - **storage_container_name** (String) The name of the Storage Container to which the datastore is linked to.
-- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: %!v(MISSING)
+- **storage_type** (String) The type of the storage to which the datstore is linked to. Possible values are: ["AzureFile" "AzureBlob" "AzureDataLakeGen1" "AzureDataLakeGen2" "AzureMySql" "AzurePostgreSql" "AzureSqlDatabase" "GlusterFs"]
 
 
