@@ -1,4 +1,5 @@
 # Terraform Provider for Azure Machine Learning
+[![Actions Status](https://github.com/telemaco019/terraform-provider-azureml/workflows/Tests/badge.svg)](https://github.com/telemaco019/terraform-provider-azureml/actions)
 
 Terraform provider for managing [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/) Workspaces. 
 
