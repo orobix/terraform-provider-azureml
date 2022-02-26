@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/Telamco019/terraform-provider-azureml/internal/provider"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+	"github.com/orobix/terraform-provider-azureml/internal/provider"
 	"log"
 )
 

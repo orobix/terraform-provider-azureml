@@ -1,6 +1,6 @@
 # Terraform Provider for Azure Machine Learning
 
-[![Actions Status](https://github.com/telemaco019/terraform-provider-azureml/workflows/Tests/badge.svg)](https://github.com/telemaco019/terraform-provider-azureml/actions)
+[![Actions Status](https://github.com/orobix/terraform-provider-azureml/workflows/Tests/badge.svg)](https://github.com/orobix/terraform-provider-azureml/actions)
 
 Terraform provider for configuring [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/)
 Workspaces.
@@ -24,7 +24,7 @@ by Hashicorp. Once that happens, this repository will not be maintained anymore.
 terraform {
   required_providers {
     azureml = {
-      source  = "registry.terraform.io/Telemaco019/azureml"
+      source  = "registry.terraform.io/orobix/azureml"
       version = "0.0.1"
     }
   }
