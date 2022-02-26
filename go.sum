@@ -292,8 +292,8 @@ github.com/nsf/jsondiff v0.0.0-20200515183724-f29ed568f4ce h1:RPclfga2SEJmgMmz2k
 github.com/nsf/jsondiff v0.0.0-20200515183724-f29ed568f4ce/go.mod h1:uFMI8w+ref4v2r9jz+c9i1IfIttS/OkmLfrk1jne5hs=
 github.com/oklog/run v1.0.0 h1:Ru7dDtJNOyC66gQ5dQmaCa0qIsAUFY3sFpK1Xk8igrw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
-github.com/orobix/azureml-go-sdk v0.0.2 h1:s5ZwZTXCUCCpkuJjnZUWbBGURVGeETe4oIyOw/hhrdU=
-github.com/orobix/azureml-go-sdk v0.0.2/go.mod h1:dpTTkvBkrLmwGZcdFzxYlMWMxwUDkYASkr1V7XDtocA=
+github.com/orobix/azureml-go-sdk v0.0.3 h1:jUiXFgLcWHD4X1RPqMT/7ZJrFWQZ6qQLjar4iGYxG7Y=
+github.com/orobix/azureml-go-sdk v0.0.3/go.mod h1:dpTTkvBkrLmwGZcdFzxYlMWMxwUDkYASkr1V7XDtocA=
 github.com/pkg/browser v0.0.0-20210115035449-ce105d075bb4/go.mod h1:N6UoU20jOqggOuDwUaBQpluzLNDqif3kq9z2wpdYEfQ=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
