@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -206,11 +207,17 @@ func resourceDatastoreRead(ctx context.Context, d *schema.ResourceData, meta int
 
 	ds, err := client.ws.GetDatastore(resourceGroupName, workspaceName, datastoreName)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("Error reading datastore %s", datastoreName),
-			Detail:   err.Error(),
-		})
+		var notFoundErr *workspace.ResourceNotFoundError
+		if errors.As(err, &notFoundErr) {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  fmt.Sprintf("Error reading datastore %s", datastoreName),
+				Detail:   err.Error(),
+			})
+		}
+		return diags
 	}
 
 	d.SetId(ds.Id)
