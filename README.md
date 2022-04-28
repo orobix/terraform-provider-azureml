@@ -24,8 +24,8 @@ by Hashicorp. Once that happens, this repository will not be maintained anymore.
 terraform {
   required_providers {
     azureml = {
-      source  = "registry.terraform.io/orobix/azureml"
-      version = "0.0.1"
+      source  = "registry.terraform.io/Telemaco019/azureml"
+      version = "0.0.3"
     }
   }
 }
