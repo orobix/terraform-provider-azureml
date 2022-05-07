@@ -18,7 +18,7 @@ Principal specific to Terraform.
 terraform {
   required_providers {
     azureml = {
-      source = "registry.terraform.io/Telemaco019/azureml"
+      source = "registry.terraform.io/orobix/azureml"
     }
   }
 }
