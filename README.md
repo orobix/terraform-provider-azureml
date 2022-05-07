@@ -27,7 +27,6 @@ terraform {
   required_providers {
     azureml = {
       source  = "registry.terraform.io/orobix/azureml"
-      version = "0.0.3"
     }
   }
 }
@@ -81,3 +80,8 @@ make install
 ```shell
 go generate
 ```
+
+## License
+This project is licensed under the MIT License.
+
+Copyright (c) 2021 Michele Zanotti.
