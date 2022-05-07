@@ -5,6 +5,8 @@
 Terraform provider for configuring [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/)
 Workspaces.
 
+Documentation available [here](https://registry.terraform.io/providers/orobix/azureml/latest).
+
 ## Disclaimer
 
 This Terraform provider relies on [Azure ML REST APIs](https://docs.microsoft.com/en-us/rest/api/azureml/)
