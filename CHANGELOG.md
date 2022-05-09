@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+* Update azureml-go-sdk version to v0.0.5 for providing new mandatory fields required by 
+ datastore APIs
+
 ## 0.0.4
 * Update namespace from "Telemaco019" to "orobix"
 
