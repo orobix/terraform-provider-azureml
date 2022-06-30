@@ -3,7 +3,7 @@ module github.com/orobix/terraform-provider-azureml
 go 1.17
 
 require (
-	github.com/hashicorp/terraform-plugin-docs v0.10.1
+	github.com/hashicorp/terraform-plugin-docs v0.12.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
 	github.com/orobix/azureml-go-sdk v0.0.5
 )
@@ -31,11 +31,11 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
-	github.com/hashicorp/go-version v1.5.0 // indirect
-	github.com/hashicorp/hc-install v0.3.2 // indirect
+	github.com/hashicorp/go-version v1.6.0 // indirect
+	github.com/hashicorp/hc-install v0.4.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.12.0 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform-exec v0.16.1 // indirect
+	github.com/hashicorp/terraform-exec v0.17.1 // indirect
 	github.com/hashicorp/terraform-json v0.14.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.9.1 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.4.0 // indirect
@@ -71,9 +71,9 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
+	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
+	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/genproto v0.0.0-20200711021454-869866162049 // indirect
